@@ -8,41 +8,48 @@
              x:DataType="vm:DtbEditorViewModel">
     <Grid RowDefinitions="Auto,*" ColumnDefinitions="2*,3*" RowSpacing="16" ColumnSpacing="16" Margin="0">
         <Border Grid.ColumnSpan="2" Padding="16" CornerRadius="12" Background="{DynamicResource ThemeControlMidBrush}">
-        <StackPanel Spacing="12">
-        <WrapPanel VerticalAlignment="Center">
-            <Button Content="Open DTB"
+            <Grid ColumnDefinitions="3*,2.5*" ColumnSpacing="16">
+                <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                    <Button Content="Open DTB"
                             Command="{Binding OpenCommand}"
                             Theme="{DynamicResource SolidButton}"
-                Classes="Secondary"
-                Margin="0,0,8,8" />
+                            Classes="Secondary"
+                            Margin="0,0,8,8" />
                     <Button Content="Save"
                             Command="{Binding SaveCommand}"
                             Theme="{DynamicResource SolidButton}"
-                Classes="Primary"
-                Margin="0,0,8,8" />
+                            Classes="Primary"
+                            Margin="0,0,8,8" />
                     <Button Content="Save As"
                             Command="{Binding SaveAsCommand}"
                             Theme="{DynamicResource SolidButton}"
-                Classes="Secondary"
-                Margin="0,0,8,8" />
+                            Classes="Secondary"
+                            Margin="0,0,8,8" />
                     <ToggleSwitch Content="Hex for new property"
-                  IsChecked="{Binding NewPropertyUseHex}"
-                  Margin="0,0,8,8" />
+                                  IsChecked="{Binding NewPropertyUseHex}"
+                                  Margin="0,0,8,8" />
                     <TextBlock Text="*"
                                Foreground="{DynamicResource ThemeAccentBrush}"
                                FontWeight="Bold"
                                VerticalAlignment="Center"
-                   IsVisible="{Binding IsDirty}"
-                   Margin="0,0,8,8"/>
+                               IsVisible="{Binding IsDirty}"
+                               Margin="0,0,8,8" />
                 </WrapPanel>
-                <TextBlock TextWrapping="Wrap">
-                    <Run Text="Current file: " />
-                    <Run Text="{Binding CurrentFilePath, TargetNullValue='(none)', FallbackValue='(none)'}" />
-                </TextBlock>
-                <TextBlock Text="{Binding StatusMessage}"
-                           FontWeight="SemiBold"
-                           TextWrapping="Wrap" />
-            </StackPanel>
+                <StackPanel Grid.Column="1"
+                            Spacing="8"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center">
+                    <TextBlock TextWrapping="Wrap"
+                               TextAlignment="Right">
+                        <Run Text="Current file: " />
+                        <Run Text="{Binding CurrentFilePath, TargetNullValue='(none)', FallbackValue='(none)'}" />
+                    </TextBlock>
+                    <TextBlock Text="{Binding StatusMessage}"
+                               FontWeight="SemiBold"
+                               TextWrapping="Wrap"
+                               TextAlignment="Right" />
+                </StackPanel>
+            </Grid>
         </Border>
 
         <Border Grid.Row="1" Grid.Column="0" CornerRadius="12" Padding="16" Background="{DynamicResource ThemeControlMidBrush}">
