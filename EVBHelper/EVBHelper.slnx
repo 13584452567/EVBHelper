@@ -1,3 +1,6 @@
 <Solution>
-  <Project Path="EVBHelper/EVBHelper.csproj" />
+  <Project Path="DeviceTreeNode/DeviceTreeNode.csproj" />
+  <Project Path="EVBHelper/EVBHelper.csproj">
+    <BuildDependency Project="DeviceTreeNode/DeviceTreeNode.csproj" />
+  </Project>
 </Solution>
