@@ -28,4 +28,8 @@
     <PackageReference Include="Irihi.Ursa" Version="1.13.0" />
     <PackageReference Include="Irihi.Ursa.Themes.Semi" Version="1.13.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DeviceTreeNode\DeviceTreeNode.csproj" />
+  </ItemGroup>
 </Project>

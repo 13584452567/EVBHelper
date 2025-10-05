@@ -3,6 +3,7 @@
               xmlns:vm="using:EVBHelper.ViewModels"
               xmlns:conv="using:EVBHelper.Converters"
               xmlns:models="using:EVBHelper.Models"
+              xmlns:views="using:EVBHelper.Views"
               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
               xmlns:u="https://irihi.tech/ursa"
@@ -43,7 +44,7 @@
                 <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
             </Style>
         </TabControl.Styles>
-        <TabItem Header="rfel">
+    <TabItem Header="rfel">
             <Grid ColumnDefinitions="5*,3*"
                   ColumnSpacing="24"
                   Margin="0">
@@ -311,10 +312,8 @@
             </Border>
             </Grid>
         </TabItem>
-        <TabItem Header="Coming soon" IsEnabled="False">
-            <Grid Margin="24">
-                <TextBlock Text="More utilities will arrive here." HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.6" />
-            </Grid>
+        <TabItem Header="DTB">
+            <views:DtbEditorView DataContext="{Binding DtbEditor}" />
         </TabItem>
     </TabControl>
 </u:UrsaWindow>

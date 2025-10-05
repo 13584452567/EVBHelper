@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using EVBHelper.Models;
 using EVBHelper.Services;
+using EVBHelper.ViewModels.Dtb;
 
 namespace EVBHelper.ViewModels
 {
@@ -77,11 +78,14 @@ namespace EVBHelper.ViewModels
         [ObservableProperty]
         private VerbosityOption _selectedVerbosity;
 
+        public DtbEditorViewModel DtbEditor { get; }
+
         public MainWindowViewModel(IRfelCliService rfelCliService, IFileDialogService fileDialogService)
         {
             _rfelCliService = rfelCliService ?? throw new ArgumentNullException(nameof(rfelCliService));
             _fileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
             _readonlyLogs = new ReadOnlyObservableCollection<LogMessage>(_logMessages);
+            DtbEditor = new DtbEditorViewModel(fileDialogService);
 
             VerbosityOptions = new List<VerbosityOption>
             {
