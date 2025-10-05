@@ -293,7 +293,6 @@
                 <Grid RowDefinitions="Auto,*" RowSpacing="16">
                     <StackPanel Orientation="Horizontal" Spacing="12">
                         <TextBlock Classes="H5" Text="Operation Log" />
-                        <u:Badge Classes="Light" Header="Live" />
                     </StackPanel>
                     <Border Grid.Row="1"
                             Background="{DynamicResource ThemeBackgroundBrush}"
