@@ -23,10 +23,13 @@ namespace EVBHelper
                 // Avoid duplicate validations from both Avalonia and the CommunityToolkit. 
                 // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
                 DisableAvaloniaDataAnnotationValidation();
-                desktop.MainWindow = new MainWindow
-                {
-                    DataContext = new MainWindowViewModel(),
-                };
+
+                var mainWindow = new MainWindow();
+                var rfelCliService = new Services.RfelCliService();
+                var fileDialogService = new Services.DesktopFileDialogService(mainWindow);
+                mainWindow.DataContext = new MainWindowViewModel(rfelCliService, fileDialogService);
+
+                desktop.MainWindow = mainWindow;
             }
 
             base.OnFrameworkInitializationCompleted();

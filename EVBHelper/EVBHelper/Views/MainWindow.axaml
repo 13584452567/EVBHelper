@@ -1,20 +1,297 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:EVBHelper.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="EVBHelper.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="EVBHelper">
+<u:UrsaWindow xmlns="https://github.com/avaloniaui"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:vm="using:EVBHelper.ViewModels"
+              xmlns:conv="using:EVBHelper.Converters"
+              xmlns:models="using:EVBHelper.Models"
+              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+              xmlns:u="https://irihi.tech/ursa"
+              mc:Ignorable="d"
+              d:DesignWidth="1200"
+              d:DesignHeight="720"
+              x:Class="EVBHelper.Views.MainWindow"
+              x:DataType="vm:MainWindowViewModel"
+              Icon="/Assets/avalonia-logo.ico"
+              Title="EVB Helper - Board Flashing Tool"
+              MinWidth="960"
+              MinHeight="640">
 
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
+    <u:UrsaWindow.Resources>
+        <conv:LogLevelToBrushConverter x:Key="LogLevelToBrushConverter" />
+    </u:UrsaWindow.Resources>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <Grid RowDefinitions="Auto,*">
 
-</Window>
+        <Grid Grid.Row="1"
+              ColumnDefinitions="2*,3*"
+              ColumnSpacing="24"
+              Margin="24">
+            <ScrollViewer Grid.Column="0"
+                          VerticalScrollBarVisibility="Auto">
+                <StackPanel Spacing="24">
+                    <Border Theme="{DynamicResource CardBorder}" Padding="24" CornerRadius="16">
+                        <StackPanel Spacing="16">
+                            <TextBlock Classes="H5" Text="Environment Setup" />
+                            <u:Divider />
+                                                        <u:Form LabelPosition="Left" LabelWidth="140">
+                                                                <Grid ColumnDefinitions="*,Auto"
+                                                                            ColumnSpacing="12"
+                                                                            u:FormItem.Label="RFEL Path">
+                                                                        <TextBox Text="{Binding RfelPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                                         Watermark="Enter 'rfel' if it's in PATH" />
+                                                                        <Button Grid.Column="1"
+                                                                                        Content="Browse"
+                                                                                        MinWidth="96"
+                                                                                        Command="{Binding BrowseRfelCommand}"
+                                                                                        Theme="{DynamicResource SolidButton}"
+                                                                                        Classes="Secondary" />
+                                </Grid>
+                                <ComboBox u:FormItem.Label="Log Level"
+                                          Width="200"
+                                          ItemsSource="{Binding VerbosityOptions}"
+                                          SelectedItem="{Binding SelectedVerbosity, Mode=TwoWay}" />
+                            </u:Form>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Theme="{DynamicResource CardBorder}" Padding="24" CornerRadius="16">
+                        <StackPanel Spacing="16">
+                            <TextBlock Classes="H5" Text="Flash Parameters" />
+                            <u:Divider />
+                            <u:Form LabelPosition="Left" LabelWidth="140">
+                                                                <Grid ColumnDefinitions="*,Auto"
+                                                                            ColumnSpacing="12"
+                                                                            u:FormItem.Label="Firmware Image">
+                                                                        <TextBox Text="{Binding FirmwarePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                                         Watermark="Select the firmware image to flash" />
+                                                                        <Button Grid.Column="1"
+                                                                                        Content="Select"
+                                                                                        MinWidth="96"
+                                                                                        Command="{Binding BrowseFirmwareCommand}"
+                                                                                        Theme="{DynamicResource SolidButton}"
+                                                                                        Classes="Secondary" />
+                                </Grid>
+                                <TextBox u:FormItem.Label="Load Address"
+                                         Text="{Binding LoadAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Watermark="Example: 0x40008000" />
+                                <StackPanel u:FormItem.Label="Flash Options"
+                                            Spacing="12">
+                                    <CheckBox Content="Initialize DDR"
+                                              IsChecked="{Binding InitializeDdr}" />
+                                                                        <Grid ColumnDefinitions="Auto,*"
+                                                                                    ColumnSpacing="12"
+                                                                                    IsEnabled="{Binding InitializeDdr}">
+                                                                                <TextBlock Text="DDR Profile" VerticalAlignment="Center" />
+                                                                                <TextBox Grid.Column="1"
+                                                                                                 Text="{Binding DdrProfile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                                                 Watermark="Optional" />
+                                    </Grid>
+                                    <CheckBox Content="Reboot After Flash"
+                                              IsChecked="{Binding ResetAfterFlash}" />
+                                </StackPanel>
+                            </u:Form>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Theme="{DynamicResource CardBorder}" Padding="24" CornerRadius="16">
+                        <StackPanel Spacing="16">
+                            <TextBlock Classes="H5" Text="Control Panel" />
+                            <u:Divider />
+                <WrapPanel>
+                <Button Content="Detect Device"
+                    Margin="0,0,12,12"
+                    MinWidth="120"
+                    Command="{Binding CheckDeviceCommand}"
+                    Theme="{DynamicResource SolidButton}"
+                    Classes="Secondary" />
+                <Button Content="Start Flash"
+                    Margin="0,0,12,12"
+                    MinWidth="120"
+                    Command="{Binding FlashCommand}"
+                    Theme="{DynamicResource SolidButton}"
+                    Classes="Primary" />
+                <Button Content="Restart Device"
+                    Margin="0,0,12,12"
+                    MinWidth="120"
+                    Command="{Binding ResetDeviceCommand}"
+                    Theme="{DynamicResource SolidButton}"
+                    Classes="Secondary" />
+                <Button Content="Cancel Task"
+                    Margin="0,0,12,12"
+                    MinWidth="120"
+                    Command="{Binding CancelCommand}"
+                    Theme="{DynamicResource SolidButton}"
+                    Classes="Warning" />
+                <Button Content="Clear Logs"
+                    Margin="0,0,12,12"
+                    MinWidth="120"
+                    Command="{Binding ClearLogsCommand}"
+                    IsEnabled="{Binding HasLogs}"
+                    Theme="{DynamicResource BorderlessButton}"
+                    Classes="Primary" />
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Theme="{DynamicResource CardBorder}" Padding="24" CornerRadius="16">
+            <StackPanel Spacing="16">
+                            <TextBlock Classes="H5" Text="Memory &amp; Utilities" />
+                <u:Divider />
+                <u:Form LabelPosition="Left" LabelWidth="140">
+                <TextBox u:FormItem.Label="Address"
+                     Text="{Binding MemoryAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Watermark="e.g. 0x40000000" />
+                <TextBox u:FormItem.Label="Length"
+                     Text="{Binding MemoryLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Watermark="Bytes or 0x..." />
+                <TextBox u:FormItem.Label="Value (write32)"
+                     Text="{Binding MemoryValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Watermark="Example: 0x12345678" />
+                <Grid ColumnDefinitions="*,Auto"
+                      ColumnSpacing="12"
+                      u:FormItem.Label="Read Output">
+                    <TextBox Text="{Binding MemoryReadFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Watermark="Choose file to save data" />
+                    <Button Grid.Column="1"
+                        Content="Save As"
+                        MinWidth="96"
+                        Command="{Binding BrowseMemoryReadFileCommand}"
+                        Theme="{DynamicResource SolidButton}"
+                        Classes="Secondary" />
+                </Grid>
+                <Grid ColumnDefinitions="*,Auto"
+                      ColumnSpacing="12"
+                      u:FormItem.Label="Write Source">
+                    <TextBox Text="{Binding MemoryWriteFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Watermark="Choose file to load" />
+                    <Button Grid.Column="1"
+                        Content="Browse"
+                        MinWidth="96"
+                        Command="{Binding BrowseMemoryWriteFileCommand}"
+                        Theme="{DynamicResource SolidButton}"
+                        Classes="Secondary" />
+                </Grid>
+                </u:Form>
+                <WrapPanel>
+                <Button Content="Read 32-bit"
+                    Margin="0,0,12,12"
+                    MinWidth="140"
+                    Command="{Binding Read32Command}"
+                    Theme="{DynamicResource SolidButton}"
+                    Classes="Secondary" />
+                <Button Content="Write 32-bit"
+                    Margin="0,0,12,12"
+                    MinWidth="140"
+                    Command="{Binding Write32Command}"
+                    Theme="{DynamicResource SolidButton}"
+                    Classes="Secondary" />
+                <Button Content="Hexdump"
+                    Margin="0,0,12,12"
+                    MinWidth="120"
+                    Command="{Binding HexdumpCommand}"
+                    Theme="{DynamicResource SolidButton}"
+                    Classes="Secondary" />
+                <Button Content="Dump"
+                    Margin="0,0,12,12"
+                    MinWidth="120"
+                    Command="{Binding DumpCommand}"
+                    Theme="{DynamicResource SolidButton}"
+                    Classes="Secondary" />
+                <Button Content="Read to File"
+                    Margin="0,0,12,12"
+                    MinWidth="140"
+                    Command="{Binding ReadMemoryCommand}"
+                    Theme="{DynamicResource SolidButton}"
+                    Classes="Secondary" />
+                <Button Content="Write from File"
+                    Margin="0,0,12,12"
+                    MinWidth="160"
+                    Command="{Binding WriteMemoryCommand}"
+                    Theme="{DynamicResource SolidButton}"
+                    Classes="Secondary" />
+                <Button Content="Exec Code"
+                    Margin="0,0,12,12"
+                    MinWidth="120"
+                    Command="{Binding ExecuteCodeCommand}"
+                    Theme="{DynamicResource SolidButton}"
+                    Classes="Secondary" />
+                <Button Content="Show SID"
+                    Margin="0,0,12,12"
+                    MinWidth="120"
+                    Command="{Binding ShowSidCommand}"
+                    Theme="{DynamicResource SolidButton}"
+                    Classes="Secondary" />
+                <Button Content="Enable JTAG"
+                    Margin="0,0,12,12"
+                    MinWidth="140"
+                    Command="{Binding EnableJtagCommand}"
+                    Theme="{DynamicResource SolidButton}"
+                    Classes="Secondary" />
+                <Button Content="Run DDR Init"
+                    Margin="0,0,12,12"
+                    MinWidth="140"
+                    Command="{Binding RunDdrInitCommand}"
+                    Theme="{DynamicResource SolidButton}"
+                    Classes="Secondary" />
+                <Button Content="Show Help"
+                    Margin="0,0,12,12"
+                    MinWidth="120"
+                    Command="{Binding ShowHelpCommand}"
+                    Theme="{DynamicResource BorderlessButton}"
+                    Classes="Primary" />
+                </WrapPanel>
+            </StackPanel>
+            </Border>
+
+                    <Border Theme="{DynamicResource CardBorder}" Padding="24" CornerRadius="16">
+                        <StackPanel Spacing="16">
+                            <TextBlock Classes="H5" Text="Execution Status" />
+                            <u:Divider />
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                <TextBlock Text="Current Progress" VerticalAlignment="Center" />
+                                <ProgressBar Grid.Column="1"
+                                             Value="{Binding ProgressValue}"
+                                             IsIndeterminate="{Binding IsProgressIndeterminate}" />
+                            </Grid>
+                            <Border Background="{DynamicResource ThemeControlHighBrush}"
+                                    Padding="16"
+                                    CornerRadius="12">
+                                <TextBlock Text="{Binding StatusMessage}"
+                                           Foreground="{Binding StatusLevel, Converter={StaticResource LogLevelToBrushConverter}}"
+                                           FontWeight="SemiBold" />
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <Border Grid.Column="1"
+                    Theme="{DynamicResource CardBorder}"
+                    Padding="24"
+                    CornerRadius="16">
+                <Grid RowDefinitions="Auto,*" RowSpacing="16">
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <TextBlock Classes="H5" Text="Operation Log" />
+                        <u:Badge Classes="Light" Header="Live" />
+                    </StackPanel>
+                    <Border Grid.Row="1"
+                            Background="{DynamicResource ThemeBackgroundBrush}"
+                            Padding="16"
+                            CornerRadius="12">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <ItemsControl ItemsSource="{Binding LogMessages}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="models:LogMessage">
+                                        <TextBlock Text="{Binding DisplayText}"
+                                                   FontFamily="Consolas"
+                                                   Foreground="{Binding Level, Converter={StaticResource LogLevelToBrushConverter}}" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</u:UrsaWindow>
