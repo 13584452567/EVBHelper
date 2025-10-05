@@ -20,12 +20,33 @@
         <conv:LogLevelToBrushConverter x:Key="LogLevelToBrushConverter" />
     </u:UrsaWindow.Resources>
 
-    <Grid RowDefinitions="Auto,*">
-
-        <Grid Grid.Row="1"
-              ColumnDefinitions="2*,3*"
-              ColumnSpacing="24"
-              Margin="24">
+    <TabControl Margin="16"
+                Padding="12"
+                Background="{DynamicResource ThemeBackgroundBrush}"
+                TabStripPlacement="Top"
+                HorizontalContentAlignment="Stretch"
+                VerticalContentAlignment="Stretch">
+        <TabControl.Styles>
+            <Style Selector="TabControl">
+                <Setter Property="CornerRadius" Value="20" />
+            </Style>
+            <Style Selector="TabControl /template/ Border#headerClipBorder">
+                <Setter Property="CornerRadius" Value="16,16,0,0" />
+            </Style>
+            <Style Selector="TabItem">
+                <Setter Property="Padding" Value="24,12" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <Setter Property="Margin" Value="0,0,12,0" />
+            </Style>
+            <Style Selector="TabItem:checked">
+                <Setter Property="Background" Value="{DynamicResource ThemeControlMidBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
+            </Style>
+        </TabControl.Styles>
+        <TabItem Header="rfel">
+            <Grid ColumnDefinitions="5*,3*"
+                  ColumnSpacing="24"
+                  Margin="0">
             <ScrollViewer Grid.Column="0"
                           VerticalScrollBarVisibility="Auto">
                 <StackPanel Spacing="24">
@@ -292,6 +313,12 @@
                     </Border>
                 </Grid>
             </Border>
-        </Grid>
-    </Grid>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Coming soon" IsEnabled="False">
+            <Grid Margin="24">
+                <TextBlock Text="More utilities will arrive here." HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.6" />
+            </Grid>
+        </TabItem>
+    </TabControl>
 </u:UrsaWindow>
