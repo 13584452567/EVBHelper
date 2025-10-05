@@ -67,10 +67,6 @@
                                                                                         Theme="{DynamicResource SolidButton}"
                                                                                         Classes="Secondary" />
                                 </Grid>
-                                <ComboBox u:FormItem.Label="Log Level"
-                                          Width="200"
-                                          ItemsSource="{Binding VerbosityOptions}"
-                                          SelectedItem="{Binding SelectedVerbosity, Mode=TwoWay}" />
                             </u:Form>
                         </StackPanel>
                     </Border>
