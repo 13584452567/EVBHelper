@@ -299,7 +299,8 @@
                             Background="{DynamicResource ThemeBackgroundBrush}"
                             Padding="16"
                             CornerRadius="12">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Auto">
                             <ItemsControl ItemsSource="{Binding LogMessages}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate x:DataType="models:LogMessage">
