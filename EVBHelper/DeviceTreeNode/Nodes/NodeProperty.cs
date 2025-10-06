@@ -35,19 +35,23 @@ namespace DeviceTreeNode.Nodes
             if (!valueLen.HasValue || !nameOffset.HasValue)
                 return null;
 
-            // 获取属性值
-            byte[]? value = stream.Take((int)valueLen.Value);
-            if (value == null)
-                return null;
+            // valueLen 合法性校验（不允许超过当前剩余长度）
+            int remaining = stream.Remaining().Length;
+            if (valueLen.Value > remaining)
+                throw new FormatException("FDT property value length out of range");
+
+            // 读取属性值
+            byte[] value = stream.Take((int)valueLen.Value);
 
             // 对齐到4字节边界
             int padding = (4 - (value.Length % 4)) % 4;
-            stream.Skip(padding);
+            if (padding > 0)
+                stream.Skip(padding);
 
-            // 从字符串块中获取属性名
+            // 校验 nameOffset 合法（在字符串块大小范围内）
             string? name = owner.GetStringAtOffset((int)nameOffset.Value);
             if (name == null)
-                return null;
+                throw new FormatException("FDT property name offset invalid");
 
             return new NodeProperty(name, value, owner);
         }
@@ -91,7 +95,7 @@ namespace DeviceTreeNode.Nodes
         // 将属性值解析为字符串列表
         public string[] AsStringList()
         {
-            if (Value.Length == 0 || Value[Value.Length - 1] != 0)
+            if (Value.Length == 0 || Value[^1] != 0)
                 return [];
 
             return AsString().Split('\0');

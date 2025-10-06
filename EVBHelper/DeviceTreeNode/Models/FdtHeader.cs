@@ -64,5 +64,15 @@ namespace DeviceTreeNode.Models
         }
 
         public bool ValidMagic => Magic == FDT_MAGIC;
+
+        /// <summary>
+        /// 版本兼容性：若版本 >= 17 且 lastCompatibleVersion <= 16 一般为常见组合
+        /// </summary>
+        public bool LikelyVersionSupported => Version >= 16 && LastCompatibleVersion <= Version;
+
+        /// <summary>
+        /// 判断字符串块是否为空（便于快速跳过解析）
+        /// </summary>
+        public bool HasStrings => StringsSize > 0;
     }
 }
