@@ -9,9 +9,10 @@ namespace EVBHelper.ViewModels.Dtb;
 public partial class DtbPropertyViewModel : ObservableObject
 {
     private readonly Action _markDirty;
-    private bool _useHexEditing;
+    private PropertyEditorMode _editorMode;
     private string? _validationError;
     private static readonly FontFamily HexFontFamily = new("Consolas");
+    private readonly string _modeGroupName = $"dtb-prop-mode-{Guid.NewGuid():N}";
 
     public event EventHandler? ValueChanged;
 
@@ -20,47 +21,98 @@ public partial class DtbPropertyViewModel : ObservableObject
         Property = property ?? throw new ArgumentNullException(nameof(property));
         _markDirty = markDirty ?? throw new ArgumentNullException(nameof(markDirty));
 
-        _useHexEditing = !property.CanEditAsText;
+        _editorMode = property.CanEditAsText ? PropertyEditorMode.Text : PropertyEditorMode.Hex;
         property.PropertyChanged += OnEditablePropertyPropertyChanged;
         property.ValueChanged += OnValueChanged;
+    }
+
+    public enum PropertyEditorMode
+    {
+        Text = 0,
+        Hex = 1
     }
 
     public EditableDtbProperty Property { get; }
 
     public string Name => Property.Name;
 
+    public string ModeGroupName => _modeGroupName;
+
     public bool CanEditAsText => Property.CanEditAsText;
 
     public bool UseHexEditing
     {
-        get => _useHexEditing;
+        get => EditorMode == PropertyEditorMode.Hex;
+        set => EditorMode = value ? PropertyEditorMode.Hex : PropertyEditorMode.Text;
+    }
+
+    public PropertyEditorMode EditorMode
+    {
+        get => _editorMode;
         set
         {
-            if (value == _useHexEditing)
+            if (value == _editorMode)
             {
                 return;
             }
 
-            if (!value && !Property.CanEditAsText)
+            if (value == PropertyEditorMode.Text && !Property.CanEditAsText)
             {
                 ValidationError = "This property can only be edited in hexadecimal.";
                 return;
             }
 
-            SetProperty(ref _useHexEditing, value);
+            SetProperty(ref _editorMode, value);
             ValidationError = null;
+            OnPropertyChanged(nameof(IsTextMode));
+            OnPropertyChanged(nameof(IsHexMode));
+            OnPropertyChanged(nameof(EditorModeIndex));
             OnPropertyChanged(nameof(EditorValue));
             OnPropertyChanged(nameof(EditorFontFamily));
             OnPropertyChanged(nameof(EditorAcceptsReturn));
         }
     }
 
-    public string EditorValue
+    public bool IsTextMode
     {
-        get => UseHexEditing ? Property.HexValue : Property.TextValue;
+        get => EditorMode == PropertyEditorMode.Text;
         set
         {
-            if (UseHexEditing)
+            if (value)
+            {
+                EditorMode = PropertyEditorMode.Text;
+            }
+        }
+    }
+
+    public bool IsHexMode
+    {
+        get => EditorMode == PropertyEditorMode.Hex;
+        set
+        {
+            if (value)
+            {
+                EditorMode = PropertyEditorMode.Hex;
+            }
+        }
+    }
+
+    public int EditorModeIndex
+    {
+        get => (int)EditorMode;
+        set
+        {
+            var requested = value == 0 ? PropertyEditorMode.Text : PropertyEditorMode.Hex;
+            EditorMode = requested;
+        }
+    }
+
+    public string EditorValue
+    {
+        get => EditorMode == PropertyEditorMode.Hex ? Property.HexValue : Property.TextValue;
+        set
+        {
+            if (EditorMode == PropertyEditorMode.Hex)
             {
                 if (Property.TrySetHexValue(value, out var hexError))
                 {
@@ -89,9 +141,9 @@ public partial class DtbPropertyViewModel : ObservableObject
         }
     }
 
-    public FontFamily EditorFontFamily => UseHexEditing ? HexFontFamily : FontFamily.Default;
+    public FontFamily EditorFontFamily => EditorMode == PropertyEditorMode.Hex ? HexFontFamily : FontFamily.Default;
 
-    public bool EditorAcceptsReturn => !UseHexEditing;
+    public bool EditorAcceptsReturn => EditorMode != PropertyEditorMode.Hex;
 
     public string? ValidationError
     {
@@ -116,7 +168,7 @@ public partial class DtbPropertyViewModel : ObservableObject
         OnPropertyChanged(nameof(CanEditAsText));
         if (!Property.CanEditAsText)
         {
-            UseHexEditing = true;
+            EditorMode = PropertyEditorMode.Hex;
         }
         NotifyDirty();
     }
@@ -129,7 +181,7 @@ public partial class DtbPropertyViewModel : ObservableObject
             OnPropertyChanged(nameof(CanEditAsText));
             if (!Property.CanEditAsText)
             {
-                UseHexEditing = true;
+                EditorMode = PropertyEditorMode.Hex;
             }
         }
         else if (e.PropertyName == nameof(EditableDtbProperty.ValidationError))

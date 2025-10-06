@@ -1,3 +1,4 @@
+using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -58,6 +59,20 @@ public partial class DtbEditorViewModel : ViewModelBase
 
     [ObservableProperty]
     private string _newNodeName = string.Empty;
+
+    public int NewPropertyModeIndex
+    {
+        get => NewPropertyUseHex ? 1 : 0;
+        set => NewPropertyUseHex = value == 1;
+    }
+
+    private static readonly FontFamily HexEditorFont = new("Consolas");
+
+    public FontFamily NewPropertyFontFamily => NewPropertyUseHex ? HexEditorFont : FontFamily.Default;
+
+    public bool NewPropertyAcceptsReturn => !NewPropertyUseHex;
+
+    public string NewPropertyWatermark => NewPropertyUseHex ? "Hex bytes (e.g. 00 FF AA)" : "Property value";
 
     [RelayCommand]
     private async Task OpenAsync()
@@ -186,7 +201,6 @@ public partial class DtbEditorViewModel : ViewModelBase
         StatusMessage = $"Added property {name}";
         NewPropertyName = string.Empty;
         NewPropertyValue = string.Empty;
-        NewPropertyUseHex = false;
     }
 
     [RelayCommand(CanExecute = nameof(CanRemoveProperty))]
@@ -391,5 +405,13 @@ public partial class DtbEditorViewModel : ViewModelBase
         AddPropertyCommand.NotifyCanExecuteChanged();
         AddNodeCommand.NotifyCanExecuteChanged();
         RemoveNodeCommand.NotifyCanExecuteChanged();
+    }
+
+    partial void OnNewPropertyUseHexChanged(bool value)
+    {
+        OnPropertyChanged(nameof(NewPropertyModeIndex));
+        OnPropertyChanged(nameof(NewPropertyFontFamily));
+        OnPropertyChanged(nameof(NewPropertyAcceptsReturn));
+        OnPropertyChanged(nameof(NewPropertyWatermark));
     }
 }
