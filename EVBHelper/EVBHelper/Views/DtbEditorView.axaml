@@ -144,12 +144,12 @@
                                     <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto" RowSpacing="6" ColumnSpacing="10">
                                         <StackPanel Orientation="Horizontal" Spacing="6">
                                             <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
-                                            <Border Background="{DynamicResource ThemeControlMidBrush}"
-                                                    Padding="6,2"
-                                                    CornerRadius="6">
+                        <Border Background="{DynamicResource ThemeAccentBrush}"
+                            Padding="6,2"
+                            CornerRadius="6">
                                                 <TextBlock Text="{Binding Kind}"
                                                            FontSize="11"
-                                                           Foreground="{DynamicResource ThemeForegroundBrush}" />
+                               Foreground="{DynamicResource ThemeForegroundOnAccentBrush}" />
                                             </Border>
                                         </StackPanel>
                                         <StackPanel Grid.Column="1"

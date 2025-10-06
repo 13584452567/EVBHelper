@@ -3,4 +3,5 @@
   <Project Path="EVBHelper/EVBHelper.csproj">
     <BuildDependency Project="DeviceTreeNode/DeviceTreeNode.csproj" />
   </Project>
+  <Project Path="GUIDPartitionTable/GPT.csproj" />
 </Solution>
