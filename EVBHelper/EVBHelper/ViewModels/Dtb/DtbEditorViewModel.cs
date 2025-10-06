@@ -7,6 +7,7 @@ using EVBHelper.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -269,28 +270,51 @@ public partial class DtbEditorViewModel : ViewModelBase
 
     private async Task LoadDocumentAsync(string path)
     {
-        DisposeDocument();
+        EditableDtb? newDocument = null;
 
-        byte[] data = await File.ReadAllBytesAsync(path).ConfigureAwait(true);
-        var document = EditableDtb.Load(data, path);
-        document.DirtyChanged += DocumentOnDirtyChanged;
-
-        foreach (var node in document.EnumerateNodes())
+        try
         {
-            document.TrackNode(node);
+            byte[] data = await File.ReadAllBytesAsync(path).ConfigureAwait(true);
+            newDocument = EditableDtb.Load(data, path);
+
+            foreach (var node in newDocument.EnumerateNodes())
+            {
+                newDocument.TrackNode(node);
+            }
+
+            newDocument.DirtyChanged += DocumentOnDirtyChanged;
+
+            DisposeDocument();
+
+            _document = newDocument;
+            newDocument = null;
+
+            Nodes.Clear();
+            var rootVm = CreateNodeViewModel(_document.Root);
+            Nodes.Add(rootVm);
+            SelectedNode = rootVm;
+
+            CurrentFilePath = path;
+            HasDocument = true;
+            _document.ResetDirty();
+            UpdateDirtyState();
+            StatusMessage = $"Loaded {Path.GetFileName(path)}";
         }
-
-        _document = document;
-        Nodes.Clear();
-        var rootVm = CreateNodeViewModel(document.Root);
-        Nodes.Add(rootVm);
-        SelectedNode = rootVm;
-
-        CurrentFilePath = path;
-        HasDocument = true;
-        document.ResetDirty();
-        UpdateDirtyState();
-        StatusMessage = $"Loaded {Path.GetFileName(path)}";
+        catch (Exception ex)
+        {
+            var fileName = Path.GetFileName(path);
+            var displayName = string.IsNullOrWhiteSpace(fileName) ? "DTB file" : fileName;
+            StatusMessage = $"Failed to load {displayName}: {ex.Message}";
+            Debug.WriteLine($"[DTB] Failed to load '{path}': {ex}");
+            UpdateDirtyState();
+        }
+        finally
+        {
+            if (newDocument != null)
+            {
+                newDocument.DirtyChanged -= DocumentOnDirtyChanged;
+            }
+        }
     }
 
     private async Task SaveToFileAsync(string path)
