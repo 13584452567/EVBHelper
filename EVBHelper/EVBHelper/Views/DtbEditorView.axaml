@@ -25,29 +25,20 @@
                             Theme="{DynamicResource SolidButton}"
                             Classes="Secondary"
                             Margin="0,0,8,8" />
-                    <ToggleSwitch Content="Hex for new property"
-                                  IsChecked="{Binding NewPropertyUseHex}"
-                                  Margin="0,0,8,8" />
-                    <TextBlock Text="*"
-                               Foreground="{DynamicResource ThemeAccentBrush}"
-                               FontWeight="Bold"
-                               VerticalAlignment="Center"
-                               IsVisible="{Binding IsDirty}"
-                               Margin="0,0,8,8" />
+					<TextBlock TextWrapping="Wrap"
+		                       TextAlignment="Left">
+						<Run Text="Current file: " />
+						<Run Text="{Binding CurrentFilePath, TargetNullValue='(none)', FallbackValue='(none)'}" />
+					</TextBlock>
                 </WrapPanel>
                 <StackPanel Grid.Column="1"
                             Spacing="8"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Center">
-                    <TextBlock TextWrapping="Wrap"
-                               TextAlignment="Right">
-                        <Run Text="Current file: " />
-                        <Run Text="{Binding CurrentFilePath, TargetNullValue='(none)', FallbackValue='(none)'}" />
-                    </TextBlock>
                     <TextBlock Text="{Binding StatusMessage}"
                                FontWeight="SemiBold"
                                TextWrapping="Wrap"
-                               TextAlignment="Right" />
+                               TextAlignment="Left" />
                 </StackPanel>
             </Grid>
         </Border>

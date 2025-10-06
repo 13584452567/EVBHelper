@@ -1,8 +1,8 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+using EVBHelper.Models.Dtb;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using CommunityToolkit.Mvvm.ComponentModel;
-using EVBHelper.Models.Dtb;
 
 namespace EVBHelper.ViewModels.Dtb;
 
@@ -60,11 +60,11 @@ public partial class DtbNodeViewModel : ObservableObject
 
     public DtbPropertyViewModel AddProperty(string name, EditableDtbProperty property)
     {
-    Node.Properties.Add(property);
-    var vm = CreatePropertyViewModel(property);
-    Properties.Add(vm);
-    RaiseValueChanged();
-    return vm;
+        Node.Properties.Add(property);
+        var vm = CreatePropertyViewModel(property);
+        Properties.Add(vm);
+        RaiseValueChanged();
+        return vm;
     }
 
     public void RemoveProperty(DtbPropertyViewModel property)

@@ -16,7 +16,7 @@ namespace DeviceTreeNode.StandardNodes
         /// <summary>
         /// 解析路径别名
         /// </summary>
-        public FdtNode ResolveAlias(string alias)
+        public FdtNode? ResolveAlias(string alias)
         {
             var prop = _node.GetProperty(alias);
             if (prop == null)

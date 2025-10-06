@@ -1,8 +1,8 @@
-using System;
-using System.ComponentModel;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using EVBHelper.Models.Dtb;
+using System;
+using System.ComponentModel;
 
 namespace EVBHelper.ViewModels.Dtb;
 
@@ -109,9 +109,9 @@ public partial class DtbPropertyViewModel : ObservableObject
 
     private void OnValueChanged(object? sender, EventArgs e)
     {
-    OnPropertyChanged(nameof(EditorValue));
-    OnPropertyChanged(nameof(EditorFontFamily));
-    OnPropertyChanged(nameof(EditorAcceptsReturn));
+        OnPropertyChanged(nameof(EditorValue));
+        OnPropertyChanged(nameof(EditorFontFamily));
+        OnPropertyChanged(nameof(EditorAcceptsReturn));
         OnPropertyChanged(nameof(Kind));
         OnPropertyChanged(nameof(CanEditAsText));
         if (!Property.CanEditAsText)

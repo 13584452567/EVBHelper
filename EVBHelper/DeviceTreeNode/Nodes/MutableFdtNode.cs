@@ -8,7 +8,7 @@
         private Dictionary<string, NodeProperty> _properties;
         private List<MutableFdtNode> _children;
 
-        public MutableFdtNode(string name, Fdt owner, byte[] props, byte[] parentProps = null)
+        public MutableFdtNode(string name, Fdt owner, byte[] props, byte[]? parentProps = null)
             : base(name, owner, props, parentProps)
         {
             // 预加载所有属性和子节点以便修改

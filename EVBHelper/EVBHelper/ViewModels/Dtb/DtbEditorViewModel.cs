@@ -1,14 +1,14 @@
+using Avalonia.Platform.Storage;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using EVBHelper.Models.Dtb;
+using EVBHelper.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonia.Platform.Storage;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using EVBHelper.Models.Dtb;
-using EVBHelper.Services;
 
 namespace EVBHelper.ViewModels.Dtb;
 
@@ -21,7 +21,7 @@ public partial class DtbEditorViewModel : ViewModelBase
     {
         _fileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
         Nodes = new ObservableCollection<DtbNodeViewModel>();
-    StatusMessage = "Select a DTB file";
+        StatusMessage = "Select a DTB file";
     }
 
     public ObservableCollection<DtbNodeViewModel> Nodes { get; }
@@ -183,7 +183,7 @@ public partial class DtbEditorViewModel : ViewModelBase
         SelectedProperty = vm;
         _document.MarkDirty();
         UpdateDirtyState();
-    StatusMessage = $"Added property {name}";
+        StatusMessage = $"Added property {name}";
         NewPropertyName = string.Empty;
         NewPropertyValue = string.Empty;
         NewPropertyUseHex = false;
@@ -201,7 +201,7 @@ public partial class DtbEditorViewModel : ViewModelBase
         SelectedNode.RemoveProperty(SelectedProperty);
         _document.MarkDirty();
         UpdateDirtyState();
-    StatusMessage = $"Removed property {name}";
+        StatusMessage = $"Removed property {name}";
     }
 
     [RelayCommand(CanExecute = nameof(CanModifySelection))]
@@ -257,8 +257,8 @@ public partial class DtbEditorViewModel : ViewModelBase
         DisposeDocument();
 
         byte[] data = await File.ReadAllBytesAsync(path).ConfigureAwait(true);
-    var document = EditableDtb.Load(data, path);
-    document.DirtyChanged += DocumentOnDirtyChanged;
+        var document = EditableDtb.Load(data, path);
+        document.DirtyChanged += DocumentOnDirtyChanged;
 
         foreach (var node in document.EnumerateNodes())
         {
@@ -274,8 +274,8 @@ public partial class DtbEditorViewModel : ViewModelBase
         CurrentFilePath = path;
         HasDocument = true;
         document.ResetDirty();
-    UpdateDirtyState();
-    StatusMessage = $"Loaded {Path.GetFileName(path)}";
+        UpdateDirtyState();
+        StatusMessage = $"Loaded {Path.GetFileName(path)}";
     }
 
     private async Task SaveToFileAsync(string path)
@@ -289,9 +289,9 @@ public partial class DtbEditorViewModel : ViewModelBase
         await File.WriteAllBytesAsync(path, data).ConfigureAwait(true);
         _document.ResetDirty();
         _document.UpdateSourcePath(path);
-    UpdateDirtyState();
-    CurrentFilePath = path;
-    StatusMessage = $"Saved to {Path.GetFileName(path)}";
+        UpdateDirtyState();
+        CurrentFilePath = path;
+        StatusMessage = $"Saved to {Path.GetFileName(path)}";
     }
 
     private void UpdateDirtyState()
@@ -358,7 +358,7 @@ public partial class DtbEditorViewModel : ViewModelBase
         SelectedNode = null;
         SelectedProperty = null;
         CurrentFilePath = null;
-    StatusMessage = "Select a DTB file";
+        StatusMessage = "Select a DTB file";
         UpdateDirtyState();
     }
 

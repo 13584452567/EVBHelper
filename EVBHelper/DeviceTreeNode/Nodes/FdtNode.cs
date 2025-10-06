@@ -11,15 +11,15 @@ namespace DeviceTreeNode.Nodes
     {
         private readonly Fdt _owner;
         private readonly byte[] _props;
-        private readonly byte[] _parentProps;
-        private FdtNode _parent;
+        private readonly byte[]? _parentProps;
+        private FdtNode? _parent;
 
         public string Name { get; }
 
         // 添加Owner属性以便外部访问
         public Fdt Owner => _owner;
 
-        public FdtNode(string name, Fdt owner, byte[] props, byte[] parentProps = null, FdtNode parent = null)
+        public FdtNode(string name, Fdt owner, byte[] props, byte[]? parentProps = null, FdtNode? parent = null)
         {
             Name = name;
             _owner = owner ?? throw new ArgumentNullException(nameof(owner));
@@ -52,7 +52,7 @@ namespace DeviceTreeNode.Nodes
         /// <summary>
         /// 获取指定名称的属性
         /// </summary>
-        public NodeProperty GetProperty(string name)
+        public NodeProperty? GetProperty(string name)
         {
             return Properties().FirstOrDefault(p => p.Name == name);
         }
@@ -210,7 +210,7 @@ namespace DeviceTreeNode.Nodes
                 // 尝试从父属性区域解析
                 if (_parentProps != null && _parentProps.Length > 0)
                 {
-                    var tempNode = new FdtNode("temp", _owner, _parentProps);
+                    var tempNode = new FdtNode("temp", _owner, _parentProps!);
                     return tempNode.CellSizes;
                 }
 

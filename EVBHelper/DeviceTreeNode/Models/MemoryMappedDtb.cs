@@ -93,7 +93,7 @@ namespace DeviceTreeNode.Models
             if (index < 0)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
-            Fdt result = null;
+            Fdt? result = null;
             int count = 0;
 
             ForEachDtb((i, fdt) =>
@@ -103,10 +103,7 @@ namespace DeviceTreeNode.Models
                 count = i + 1;
             });
 
-            if (result == null)
-                throw new ArgumentOutOfRangeException(nameof(index), $"DTB index {index} not found, max index is {count - 1}");
-
-            return result;
+            return result ?? throw new ArgumentOutOfRangeException(nameof(index), $"DTB index {index} not found, max index is {count - 1}");
         }
 
         /// <summary>

@@ -38,7 +38,7 @@ public class Fdt
     /// <summary>
     /// 查找指定路径的节点
     /// </summary>
-    public FdtNode FindNode(string path)
+    public FdtNode? FindNode(string path)
     {
         if (string.IsNullOrEmpty(path))
             return null;
@@ -115,7 +115,7 @@ public class Fdt
     /// <summary>
     /// 获取chosen节点
     /// </summary>
-    public Chosen Chosen
+    public Chosen? Chosen
     {
         get
         {
@@ -127,7 +127,7 @@ public class Fdt
     /// <summary>
     /// 获取memory节点
     /// </summary>
-    public Memory Memory
+    public Memory? Memory
     {
         get
         {
@@ -157,7 +157,7 @@ public class Fdt
     /// <summary>
     /// 获取别名节点
     /// </summary>
-    public Aliases Aliases
+    public Aliases? Aliases
     {
         get
         {
@@ -194,7 +194,7 @@ public class Fdt
     /// <summary>
     /// 从字符串块中获取指定偏移量的字符串
     /// </summary>
-    internal string GetStringAtOffset(int offset)
+    internal string? GetStringAtOffset(int offset)
     {
         int startOffset = (int)_header.StringsOffset + offset;
         if (startOffset >= _data.Length)

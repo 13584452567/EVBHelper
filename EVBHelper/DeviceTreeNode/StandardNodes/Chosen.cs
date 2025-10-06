@@ -14,7 +14,7 @@ namespace DeviceTreeNode.StandardNodes
         }
 
         // 获取引导参数
-        public string Bootargs => _node.GetProperty("bootargs")?.AsString();
+        public string? Bootargs => _node.GetProperty("bootargs")?.AsString();
 
         // 获取初始化RAM磁盘地址
         public IntPtr? InitrdStart
@@ -42,15 +42,15 @@ namespace DeviceTreeNode.StandardNodes
             InitrdEnd.Value.ToInt64() - InitrdStart.Value.ToInt64() : null;
 
         // 获取标准输入设备路径
-        public string StdinPath => _node.GetProperty("stdin-path")?.AsString();
+        public string? StdinPath => _node.GetProperty("stdin-path")?.AsString();
 
         // 获取标准输出设备路径
-        public string StdoutPath => _node.GetProperty("stdout-path")?.AsString();
+        public string? StdoutPath => _node.GetProperty("stdout-path")?.AsString();
 
         // 获取标准输入设备节点
-        public FdtNode StdinNode => !string.IsNullOrEmpty(StdinPath) ? _fdt.FindNode(StdinPath) : null;
+        public FdtNode? StdinNode => !string.IsNullOrEmpty(StdinPath) ? _fdt.FindNode(StdinPath) : null;
 
         // 获取标准输出设备节点
-        public FdtNode StdoutNode => !string.IsNullOrEmpty(StdoutPath) ? _fdt.FindNode(StdoutPath) : null;
+        public FdtNode? StdoutNode => !string.IsNullOrEmpty(StdoutPath) ? _fdt.FindNode(StdoutPath) : null;
     }
 }

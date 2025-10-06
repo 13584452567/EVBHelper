@@ -11,7 +11,7 @@ namespace DeviceTreeNode.Core
             _data = data;
         }
 
-        public static CString FromBytes(byte[] data)
+        public static CString? FromBytes(byte[]? data)
         {
             if (data == null)
                 return null;
@@ -37,7 +37,7 @@ namespace DeviceTreeNode.Core
         // 转换为UTF-8字符串
         public string AsString()
         {
-            if (_data == null || _data.Length <= 1)
+            if (_data.Length <= 1)
                 return string.Empty;
 
             return Encoding.UTF8.GetString(_data, 0, _data.Length - 1);

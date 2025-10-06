@@ -1,6 +1,5 @@
-﻿using System;
-using Avalonia;
-using Avalonia.Media;
+﻿using Avalonia;
+using System;
 
 namespace EVBHelper
 {

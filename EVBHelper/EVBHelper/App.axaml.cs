@@ -1,11 +1,10 @@
-using System.Linq;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using EVBHelper.ViewModels;
 using EVBHelper.Views;
+using System.Linq;
 
 namespace EVBHelper
 {

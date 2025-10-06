@@ -20,7 +20,7 @@ namespace DeviceTreeNode.StandardNodes
             _node.GetProperty("compatible")?.AsStringList() ?? [];
 
         // 获取当前运行的序列号
-        public string Serial =>
+        public string? Serial =>
             _node.GetProperty("serial-number")?.AsString();
 
         // 获取系统单元大小

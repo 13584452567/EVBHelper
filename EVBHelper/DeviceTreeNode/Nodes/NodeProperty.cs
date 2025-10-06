@@ -23,7 +23,7 @@ namespace DeviceTreeNode.Nodes
             Value = newValue ?? [];
         }
 
-        public static NodeProperty Parse(FdtData stream, Fdt owner)
+        public static NodeProperty? Parse(FdtData stream, Fdt owner)
         {
             // 跳过FDT_PROP标记
             stream.Skip(4);
@@ -36,7 +36,7 @@ namespace DeviceTreeNode.Nodes
                 return null;
 
             // 获取属性值
-            byte[] value = stream.Take((int)valueLen.Value);
+            byte[]? value = stream.Take((int)valueLen.Value);
             if (value == null)
                 return null;
 
@@ -45,7 +45,7 @@ namespace DeviceTreeNode.Nodes
             stream.Skip(padding);
 
             // 从字符串块中获取属性名
-            string name = owner.GetStringAtOffset((int)nameOffset.Value);
+            string? name = owner.GetStringAtOffset((int)nameOffset.Value);
             if (name == null)
                 return null;
 

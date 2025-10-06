@@ -75,7 +75,7 @@
         public bool Equals(BigEndianU32 other) => _value == other._value;
 
         // 重写Object方法
-        public override bool Equals(object obj) =>
+        public override bool Equals(object? obj) =>
             obj is BigEndianU32 other && Equals(other);
 
         public override int GetHashCode() => _value.GetHashCode();
@@ -162,7 +162,7 @@
         public bool Equals(BigEndianU64 other) => _value == other._value;
 
         // 重写Object方法
-        public override bool Equals(object obj) =>
+        public override bool Equals(object? obj) =>
             obj is BigEndianU64 other && Equals(other);
 
         public override int GetHashCode() => _value.GetHashCode();

@@ -36,7 +36,7 @@ namespace DeviceTreeNode.Models
             StructSize = structSize;
         }
 
-        public static FdtHeader FromBytes(FdtData data)
+        public static FdtHeader? FromBytes(FdtData data)
         {
             uint? magic = data.ReadUInt32();
             uint? totalSize = data.ReadUInt32();

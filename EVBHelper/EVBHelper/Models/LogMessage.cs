@@ -1,5 +1,5 @@
-using System;
 using EVBHelper.Services;
+using System;
 
 namespace EVBHelper.Models
 {

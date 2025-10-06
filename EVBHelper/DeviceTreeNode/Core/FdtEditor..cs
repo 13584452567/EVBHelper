@@ -88,7 +88,7 @@ namespace DeviceTreeNode.Core
         /// <summary>
         /// 获取修改后的DTB二进制数据
         /// </summary>
-        public byte[] GetModifiedDtb()
+        public byte[]? GetModifiedDtb()
         {
             if (!_modified)
                 return null;
@@ -100,7 +100,7 @@ namespace DeviceTreeNode.Core
         /// <summary>
         /// 查找fstab节点
         /// </summary>
-        private FdtNode FindFstab()
+        private FdtNode? FindFstab()
         {
             return _modifiedFdt.AllNodes().FirstOrDefault(n => n.Name == "fstab");
         }
