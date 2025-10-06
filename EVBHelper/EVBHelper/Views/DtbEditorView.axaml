@@ -171,7 +171,7 @@
                                                  TextWrapping="Wrap"
                                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                                  ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                                 MinHeight="56" />
+                                                 MinHeight="40" />
                                         <TextBlock Grid.Row="2"
                                                    Grid.ColumnSpan="2"
                                                    Text="{Binding ValidationError}"
