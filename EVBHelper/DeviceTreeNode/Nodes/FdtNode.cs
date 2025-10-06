@@ -1,5 +1,6 @@
 ﻿using DeviceTreeNode.Core;
 using DeviceTreeNode.Models;
+using System;
 using System.Text;
 
 namespace DeviceTreeNode.Nodes
@@ -288,6 +289,30 @@ namespace DeviceTreeNode.Nodes
         public bool IsCompatible(string compat)
         {
             return Compatible.Contains(compat);
+        }
+
+        /// <summary>
+        /// 根据路径或别名查找节点（由根节点解析路径）。
+        /// </summary>
+        public FdtNode? Find(string path) => Owner.FindNode(path);
+
+        /// <summary>
+        /// 深度优先遍历当前节点及其所有子节点。
+        /// </summary>
+        public void Search(Action<FdtNode> visitor)
+        {
+            ArgumentNullException.ThrowIfNull(visitor);
+
+            void Walk(FdtNode current)
+            {
+                visitor(current);
+                foreach (var child in current.Children())
+                {
+                    Walk(child);
+                }
+            }
+
+            Walk(this);
         }
     }
 }

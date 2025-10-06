@@ -2,12 +2,16 @@
 using DeviceTreeNode.Models;
 using DeviceTreeNode.Nodes;
 using DeviceTreeNode.StandardNodes;
+using System;
+using System.Linq;
 using System.Text;
 
 public class Fdt
 {
     private readonly byte[] _data;
     private readonly FdtHeader _header;
+    private FdtNode? _rootNode;
+    private Root? _rootWrapper;
 
     // 最大允许的节点嵌套深度，防止恶意构造导致深度递归/解析耗尽资源
     private const int MaxNodeDepth = 256;
@@ -96,49 +100,21 @@ public class Fdt
     /// </summary>
     public FdtNode? FindNode(string path)
     {
-        if (string.IsNullOrEmpty(path))
+        if (string.IsNullOrWhiteSpace(path))
             return null;
 
-        // 确保路径以/开头
-        if (!path.StartsWith("/"))
-            path = "/" + path;
+        path = path.Trim();
+        if (path.Length == 0)
+            return null;
 
-        string[] parts = path.Split(['/'], StringSplitOptions.RemoveEmptyEntries);
+        if (path == "/")
+            return EnsureRootNode();
 
-        // 从根节点开始查找
-        FdtNode current = Root.Node;
-        if (parts.Length == 0)
-            return current;
+        if (path.StartsWith("/", StringComparison.Ordinal))
+            return ResolveAbsolutePath(path);
 
-        foreach (string part in parts)
-        {
-            bool found = false;
-            foreach (var child in current.Children())
-            {
-                if (child.Name == part)
-                {
-                    current = child;
-                    found = true;
-                    break;
-                }
-            }
-
-            if (!found)
-            {
-                // 尝试查找别名（仅当整条路径失败时）
-                var aliases = Aliases;
-                if (aliases != null)
-                {
-                    var aliasNode = aliases.ResolveAlias(path.TrimStart('/'));
-                    if (aliasNode != null)
-                        return aliasNode;
-                }
-
-                return null;
-            }
-        }
-
-        return current;
+        // treat as alias when not an absolute path
+        return Aliases?.ResolveAlias(path);
     }
 
     /// <summary>
@@ -146,7 +122,7 @@ public class Fdt
     /// </summary>
     public IEnumerable<FdtNode> AllNodes()
     {
-        var rootNode = Root.Node;
+        var rootNode = EnsureRootNode();
         return EnumerateNodes(rootNode);
     }
 
@@ -166,7 +142,7 @@ public class Fdt
     /// <summary>
     /// 获取根节点
     /// </summary>
-    public Root Root => new(ParseRoot());
+    public Root Root => _rootWrapper ??= new Root(EnsureRootNode());
 
     /// <summary>
     /// 获取chosen节点
@@ -329,6 +305,43 @@ public class Fdt
     /// <summary>
     /// 解析根节点
     /// </summary>
+    internal FdtNode? ResolveAbsolutePath(string path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+            return null;
+
+        path = path.Trim();
+        if (path.Length == 0)
+            return null;
+
+        if (!path.StartsWith("/", StringComparison.Ordinal))
+            path = "/" + path;
+
+        if (path == "/")
+            return EnsureRootNode();
+
+        var segments = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+        var current = EnsureRootNode();
+        foreach (var segment in segments)
+        {
+            var next = current.Children().FirstOrDefault(child => child.Name == segment);
+            if (next == null)
+                return null;
+            current = next;
+        }
+
+        return current;
+    }
+
+    private FdtNode EnsureRootNode()
+    {
+        if (_rootNode != null)
+            return _rootNode;
+
+        _rootNode = ParseRoot();
+        return _rootNode;
+    }
+
     private FdtNode ParseRoot()
     {
         var stream = new FdtData(GetStructsBlock());

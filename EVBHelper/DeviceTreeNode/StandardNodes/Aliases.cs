@@ -1,4 +1,5 @@
 ﻿using DeviceTreeNode.Nodes;
+using System;
 
 namespace DeviceTreeNode.StandardNodes
 {
@@ -18,19 +19,18 @@ namespace DeviceTreeNode.StandardNodes
         /// </summary>
         public FdtNode? ResolveAlias(string alias)
         {
+            if (string.IsNullOrWhiteSpace(alias))
+                return null;
+
             var prop = _node.GetProperty(alias);
             if (prop == null)
                 return null;
 
             string path = prop.AsString();
-            if (string.IsNullOrEmpty(path))
+            if (string.IsNullOrWhiteSpace(path))
                 return null;
 
-            // 确保路径以/开头
-            if (!path.StartsWith("/"))
-                path = "/" + path;
-
-            return _fdt.FindNode(path);
+            return _fdt.ResolveAbsolutePath(path);
         }
 
         /// <summary>
