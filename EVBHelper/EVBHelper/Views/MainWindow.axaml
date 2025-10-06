@@ -3,7 +3,6 @@
               xmlns:vm="using:EVBHelper.ViewModels"
               xmlns:conv="using:EVBHelper.Converters"
               xmlns:models="using:EVBHelper.Models"
-              xmlns:views="using:EVBHelper.Views"
               xmlns:rfel="using:EVBHelper.Views.Rfel"
               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -47,9 +46,6 @@
         </TabControl.Styles>
         <TabItem Header="RFEL">
             <rfel:RfelView DataContext="{Binding Rfel}" />
-        </TabItem>
-        <TabItem Header="DTB">
-            <views:DtbEditorView DataContext="{Binding DtbEditor}" />
         </TabItem>
     </TabControl>
 </u:UrsaWindow>

@@ -29,7 +29,5 @@
     <PackageReference Include="Irihi.Ursa.Themes.Semi" Version="1.13.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DeviceTreeNode\DeviceTreeNode.csproj" />
-  </ItemGroup>
+  <!-- Removed DeviceTreeNode project reference as DTB functionality was dropped -->
 </Project>

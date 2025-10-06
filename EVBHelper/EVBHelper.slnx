@@ -1,7 +1,3 @@
 <Solution>
-  <Project Path="DeviceTreeNode/DeviceTreeNode.csproj" />
-  <Project Path="EVBHelper/EVBHelper.csproj">
-    <BuildDependency Project="DeviceTreeNode/DeviceTreeNode.csproj" />
-  </Project>
-  <Project Path="GUIDPartitionTable/GPT.csproj" />
+  <Project Path="EVBHelper/EVBHelper.csproj" />
 </Solution>
