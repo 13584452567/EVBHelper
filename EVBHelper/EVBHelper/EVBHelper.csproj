@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.3.7" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.3.7" />
     <PackageReference Include="Avalonia.Desktop" Version="11.3.7" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.7" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.7" />
@@ -27,9 +28,11 @@
     <PackageReference Include="Semi.Avalonia" Version="11.3.7" />
     <PackageReference Include="Irihi.Ursa" Version="1.13.0" />
     <PackageReference Include="Irihi.Ursa.Themes.Semi" Version="1.13.0" />
+    <PackageReference Include="Semi.Avalonia.DataGrid" Version="11.3.7" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DeviceTreeNode\DeviceTreeNode.csproj" />
+    <ProjectReference Include="..\GUIDPartitionTable\GUIDPartitionTable.csproj" />
   </ItemGroup>
 </Project>

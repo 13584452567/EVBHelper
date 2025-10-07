@@ -1,6 +1,7 @@
 ﻿using System;
 using EVBHelper.Services;
 using EVBHelper.ViewModels.Dtb;
+using EVBHelper.ViewModels.Gpt;
 using EVBHelper.ViewModels.Rfel;
 
 namespace EVBHelper.ViewModels;
@@ -21,9 +22,12 @@ public partial class MainWindowViewModel : ViewModelBase
 
         Rfel = new RfelViewModel(rfelCliService, fileDialogService);
         DtbEditor = new DtbEditorViewModel(fileDialogService);
+        GptEditor = new GptEditorViewModel(fileDialogService);
     }
 
     public RfelViewModel Rfel { get; }
 
     public DtbEditorViewModel DtbEditor { get; }
+
+    public GptEditorViewModel GptEditor { get; }
 }

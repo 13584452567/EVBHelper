@@ -51,5 +51,8 @@
         <TabItem Header="DTB">
             <views:DtbEditorView DataContext="{Binding DtbEditor}" />
         </TabItem>
+        <TabItem Header="GPT">
+            <views:GptEditorView DataContext="{Binding GptEditor}" />
+        </TabItem>
     </TabControl>
 </u:UrsaWindow>

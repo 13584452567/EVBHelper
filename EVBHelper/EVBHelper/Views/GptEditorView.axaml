@@ -1,0 +1,146 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:EVBHelper.ViewModels.Gpt"
+             mc:Ignorable="d"
+             x:Class="EVBHelper.Views.GptEditorView"
+             x:DataType="vm:GptEditorViewModel"
+             x:Name="Root">
+    <Grid RowDefinitions="Auto,*" RowSpacing="16">
+        <Border Padding="16"
+                CornerRadius="12"
+                Background="{DynamicResource ThemeControlMidBrush}">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+                <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <Button Content="Open GPT"
+                            Command="{Binding OpenCommand}"
+                            Theme="{DynamicResource SolidButton}"
+                Classes="Secondary"
+                Margin="0,0,8,0" />
+            <Button Content="Save"
+                            Command="{Binding SaveCommand}"
+                            Theme="{DynamicResource SolidButton}"
+                Classes="Primary"
+                Margin="0,0,8,0" />
+            <Button Content="Save As"
+                            Command="{Binding SaveAsCommand}"
+                            Theme="{DynamicResource SolidButton}"
+                Classes="Secondary"
+                Margin="0,0,8,0" />
+            <Button Content="Add Partition"
+                            Command="{Binding AddPartitionCommand}"
+                            Theme="{DynamicResource SolidButton}"
+                Classes="Secondary"
+                Margin="0,0,8,0" />
+            <Button Content="Remove Partition"
+                            Command="{Binding RemovePartitionCommand}"
+                            Theme="{DynamicResource SolidButton}"
+                Classes="Warning" />
+                </WrapPanel>
+                <StackPanel Grid.Column="1" Spacing="6" VerticalAlignment="Center">
+                    <TextBlock Text="Current File:" />
+                    <TextBox Text="{Binding CurrentFilePath, TargetNullValue='(None)', FallbackValue='(None)'}"
+                             IsReadOnly="True"
+                             MinWidth="280" />
+                    <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap" FontWeight="SemiBold" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1"
+                Padding="16"
+                CornerRadius="12"
+                Background="{DynamicResource ThemeControlMidBrush}">
+            <Grid RowDefinitions="Auto,*" RowSpacing="12">
+                <StackPanel Orientation="Horizontal" Spacing="16">
+                    <TextBlock Text="Table Count:" />
+                    <TextBlock Text="{Binding Tables.Count}" FontWeight="SemiBold" />
+                    <TextBlock Text="File State:" />
+                    <TextBlock Text="{Binding IsDirty, StringFormat='Modified: {0}'}" />
+                    <TextBlock Text="Checksum:" />
+                    <TextBlock Text="{Binding HasErrors, StringFormat='Has Errors: {0}'}" />
+                </StackPanel>
+
+                <TabControl Grid.Row="1"
+                            ItemsSource="{Binding Tables}"
+                            SelectedItem="{Binding SelectedTable, Mode=TwoWay}"
+                            Padding="0"
+                            Background="{DynamicResource ThemeBackgroundBrush}">
+                    <TabControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:GptTableViewModel">
+                            <TextBlock Text="{Binding Title}" />
+                        </DataTemplate>
+                    </TabControl.ItemTemplate>
+                    <TabControl.ContentTemplate>
+                        <DataTemplate x:DataType="vm:GptTableViewModel">
+                            <Grid RowDefinitions="Auto,*" RowSpacing="12">
+                                <Border Padding="12" CornerRadius="8" Background="{DynamicResource ThemeBackgroundBrush}">
+                                    <UniformGrid Columns="3" Rows="2" ColumnSpacing="12" RowSpacing="8">
+                                        <StackPanel>
+                                            <TextBlock Text="Disk GUID" FontWeight="SemiBold" />
+                                            <TextBox Text="{Binding DiskGuid}" IsReadOnly="True" />
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <TextBlock Text="Usable LBA" FontWeight="SemiBold" />
+                                            <TextBlock Text="{Binding FirstUsableLba}" />
+                                            <TextBlock Text="¡ú" HorizontalAlignment="Center" />
+                                            <TextBlock Text="{Binding LastUsableLba}" />
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <TextBlock Text="Partition Array LBA" FontWeight="SemiBold" />
+                                            <TextBlock Text="{Binding PartitionsArrayLba}" />
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <TextBlock Text="Used Partitions" FontWeight="SemiBold" />
+                                            <TextBlock Text="{Binding UsedPartitionCount}" />
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <TextBlock Text="Total Partition Slots" FontWeight="SemiBold" />
+                                            <TextBlock Text="{Binding PartitionCount}" />
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <TextBlock Text="Array Checksum" FontWeight="SemiBold" />
+                                            <TextBlock Text="{Binding PartitionArrayChecksumValid, StringFormat='Valid: {0}'}" />
+                                        </StackPanel>
+                                    </UniformGrid>
+                                </Border>
+
+                                <DataGrid Grid.Row="1"
+                                          ItemsSource="{Binding Partitions}"
+                                          SelectedItem="{Binding DataContext.SelectedPartition, ElementName=Root, Mode=TwoWay}"
+                                          AutoGenerateColumns="False"
+                                          HeadersVisibility="All"
+                                          GridLinesVisibility="All"
+                                          RowDetailsVisibilityMode="VisibleWhenSelected"
+                                          BorderThickness="0"
+                                          RowHeight="36"
+                                          SelectionMode="Single">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="#" Binding="{Binding Index}" IsReadOnly="True" Width="40" />
+                                        <DataGridTextColumn Header="Type GUID" Binding="{Binding PartitionTypeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="220" />
+                                        <DataGridTextColumn Header="Partition GUID" Binding="{Binding PartitionGuidText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="220" />
+                                        <DataGridTextColumn Header="First LBA" Binding="{Binding FirstLbaText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="120" />
+                                        <DataGridTextColumn Header="Last LBA" Binding="{Binding LastLbaText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="120" />
+                                        <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="160" />
+                                        <DataGridCheckBoxColumn Header="Required" Binding="{Binding IsRequired, Mode=TwoWay}" Width="80" />
+                                        <DataGridCheckBoxColumn Header="Hidden" Binding="{Binding IsHidden, Mode=TwoWay}" Width="80" />
+                                        <DataGridCheckBoxColumn Header="Shadow" Binding="{Binding IsShadowCopy, Mode=TwoWay}" Width="80" />
+                                        <DataGridCheckBoxColumn Header="Read-Only" Binding="{Binding IsReadOnly, Mode=TwoWay}" Width="80" />
+                                        <DataGridCheckBoxColumn Header="No Drive Letter" Binding="{Binding NoDriveLetter, Mode=TwoWay}" Width="110" />
+                                        <DataGridCheckBoxColumn Header="In Use" Binding="{Binding IsUsed}" IsReadOnly="True" Width="80" />
+                                    </DataGrid.Columns>
+                                    <DataGrid.RowDetailsTemplate>
+                                        <DataTemplate x:DataType="vm:GptPartitionEntryViewModel">
+                                            <TextBlock Text="{Binding ErrorMessage}" Foreground="{DynamicResource ThemeAccentBrush}" Margin="12,4" />
+                                        </DataTemplate>
+                                    </DataGrid.RowDetailsTemplate>
+                                </DataGrid>
+                            </Grid>
+                        </DataTemplate>
+                    </TabControl.ContentTemplate>
+                </TabControl>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
