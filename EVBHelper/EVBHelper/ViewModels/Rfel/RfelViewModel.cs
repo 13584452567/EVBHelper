@@ -24,7 +24,7 @@ public partial class RfelViewModel : ViewModelBase
     private CancellationTokenSource? _operationCts;
 
     [ObservableProperty]
-    private string _rfelPath = "rfel";
+    private string _rfelPath = "";
 
     [ObservableProperty]
     private string _firmwarePath = string.Empty;

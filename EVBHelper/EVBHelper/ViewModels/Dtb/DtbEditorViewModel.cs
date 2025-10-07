@@ -302,10 +302,9 @@ public partial class DtbEditorViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            var fileName = Path.GetFileName(path);
-            var displayName = string.IsNullOrWhiteSpace(fileName) ? "DTB file" : fileName;
-            StatusMessage = $"Failed to load {displayName}: {ex.Message}";
-            Debug.WriteLine($"[DTB] Failed to load '{path}': {ex}");
+            var message = BuildLoadErrorMessage(path, ex);
+            StatusMessage = message;
+            Debug.WriteLine($"[DTB] {message}{Environment.NewLine}{ex}");
             UpdateDirtyState();
         }
         finally
@@ -438,5 +437,20 @@ public partial class DtbEditorViewModel : ViewModelBase
         OnPropertyChanged(nameof(NewPropertyFontFamily));
         OnPropertyChanged(nameof(NewPropertyAcceptsReturn));
         OnPropertyChanged(nameof(NewPropertyWatermark));
+    }
+
+    private static string BuildLoadErrorMessage(string path, Exception ex)
+    {
+        var fileName = Path.GetFileName(path ?? string.Empty);
+        var displayName = string.IsNullOrWhiteSpace(fileName) ? "DTB file" : fileName;
+
+        return ex switch
+        {
+            FileNotFoundException => $"File '{displayName}' was not found.",
+            UnauthorizedAccessException => $"Access to '{displayName}' was denied.",
+            InvalidDataException => string.IsNullOrWhiteSpace(ex.Message) ? $"The selected file is not a valid DTB binary." : ex.Message,
+            IOException ioEx => $"I/O error while loading '{displayName}': {ioEx.Message}",
+            _ => $"Failed to load {displayName}: {ex.Message}"
+        };
     }
 }

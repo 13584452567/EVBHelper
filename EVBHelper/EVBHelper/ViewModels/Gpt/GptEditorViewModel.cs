@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -230,7 +231,11 @@ public partial class GptEditorViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            StatusMessage = $"Failed to load: {ex.Message}";
+            var message = BuildLoadErrorMessage(path, ex);
+            StatusMessage = message;
+            Debug.WriteLine($"[GPT] {message}{Environment.NewLine}{ex}");
+            UpdateDirtyState();
+            UpdateErrorState();
         }
 
         return Task.CompletedTask;
@@ -311,5 +316,20 @@ public partial class GptEditorViewModel : ViewModelBase
     StatusMessage = "Select a GPT file.";
         UpdateDirtyState();
         UpdateErrorState();
+    }
+
+    private static string BuildLoadErrorMessage(string path, Exception ex)
+    {
+        var fileName = Path.GetFileName(path ?? string.Empty);
+        var displayName = string.IsNullOrWhiteSpace(fileName) ? "GPT file" : fileName;
+
+        return ex switch
+        {
+            FileNotFoundException => $"File '{displayName}' was not found.",
+            UnauthorizedAccessException => $"Access to '{displayName}' was denied.",
+            InvalidDataException => string.IsNullOrWhiteSpace(ex.Message) ? $"The selected file is not a valid GPT image." : ex.Message,
+            IOException ioEx => $"I/O error while loading '{displayName}': {ioEx.Message}",
+            _ => $"Failed to load {displayName}: {ex.Message}"
+        };
     }
 }

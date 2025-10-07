@@ -7,53 +7,53 @@
              x:Class="EVBHelper.Views.GptEditorView"
              x:DataType="vm:GptEditorViewModel"
              x:Name="Root">
-    <Grid RowDefinitions="Auto,*" RowSpacing="16">
-        <Border Padding="16"
+    <Grid RowDefinitions="Auto,*" RowSpacing="10">
+        <Border Padding="12"
                 CornerRadius="12"
                 Background="{DynamicResource ThemeControlMidBrush}">
             <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
-                <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
-            <Button Content="Open GPT"
+                <WrapPanel Orientation="Horizontal" VerticalAlignment="Center" ItemSpacing="6">
+                    <Button Content="Open GPT"
                             Command="{Binding OpenCommand}"
                             Theme="{DynamicResource SolidButton}"
-                Classes="Secondary"
-                Margin="0,0,8,0" />
-            <Button Content="Save"
+                            Classes="Secondary"
+                            Margin="0,0,6,0" />
+                    <Button Content="Save"
                             Command="{Binding SaveCommand}"
                             Theme="{DynamicResource SolidButton}"
-                Classes="Primary"
-                Margin="0,0,8,0" />
-            <Button Content="Save As"
+                            Classes="Primary"
+                            Margin="0,0,6,0" />
+                    <Button Content="Save As"
                             Command="{Binding SaveAsCommand}"
                             Theme="{DynamicResource SolidButton}"
-                Classes="Secondary"
-                Margin="0,0,8,0" />
-            <Button Content="Add Partition"
+                            Classes="Secondary"
+                            Margin="0,0,6,0" />
+                    <Button Content="Add Partition"
                             Command="{Binding AddPartitionCommand}"
                             Theme="{DynamicResource SolidButton}"
-                Classes="Secondary"
-                Margin="0,0,8,0" />
-            <Button Content="Remove Partition"
+                            Classes="Secondary"
+                            Margin="0,0,6,0" />
+                    <Button Content="Remove Partition"
                             Command="{Binding RemovePartitionCommand}"
                             Theme="{DynamicResource SolidButton}"
-                Classes="Warning" />
+                            Classes="Warning" />
                 </WrapPanel>
-                <StackPanel Grid.Column="1" Spacing="6" VerticalAlignment="Center">
+                <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
                     <TextBlock Text="Current File:" />
                     <TextBox Text="{Binding CurrentFilePath, TargetNullValue='(None)', FallbackValue='(None)'}"
                              IsReadOnly="True"
-                             MinWidth="280" />
+                             MinWidth="260" />
                     <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap" FontWeight="SemiBold" />
                 </StackPanel>
             </Grid>
         </Border>
 
         <Border Grid.Row="1"
-                Padding="16"
+                Padding="12"
                 CornerRadius="12"
                 Background="{DynamicResource ThemeControlMidBrush}">
-            <Grid RowDefinitions="Auto,*" RowSpacing="12">
-                <StackPanel Orientation="Horizontal" Spacing="16">
+            <Grid RowDefinitions="Auto,*" RowSpacing="8">
+                <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
                     <TextBlock Text="Table Count:" />
                     <TextBlock Text="{Binding Tables.Count}" FontWeight="SemiBold" />
                     <TextBlock Text="File State:" />
@@ -74,18 +74,20 @@
                     </TabControl.ItemTemplate>
                     <TabControl.ContentTemplate>
                         <DataTemplate x:DataType="vm:GptTableViewModel">
-                            <Grid RowDefinitions="Auto,*" RowSpacing="12">
-                                <Border Padding="12" CornerRadius="8" Background="{DynamicResource ThemeBackgroundBrush}">
-                                    <UniformGrid Columns="3" Rows="2" ColumnSpacing="12" RowSpacing="8">
+                            <Grid RowDefinitions="Auto,*" RowSpacing="10">
+                                <Border Padding="10" CornerRadius="8" Background="{DynamicResource ThemeBackgroundBrush}">
+                                    <UniformGrid Columns="3" Rows="2" ColumnSpacing="10" RowSpacing="6">
                                         <StackPanel>
                                             <TextBlock Text="Disk GUID" FontWeight="SemiBold" />
                                             <TextBox Text="{Binding DiskGuid}" IsReadOnly="True" />
                                         </StackPanel>
                                         <StackPanel>
                                             <TextBlock Text="Usable LBA" FontWeight="SemiBold" />
-                                            <TextBlock Text="{Binding FirstUsableLba}" />
-                                            <TextBlock Text="¡ú" HorizontalAlignment="Center" />
-                                            <TextBlock Text="{Binding LastUsableLba}" />
+                                            <WrapPanel ItemSpacing="6">
+                                                <TextBlock Text="{Binding FirstUsableLba}" />
+                                                <TextBlock Text="->" />
+                                                <TextBlock Text="{Binding LastUsableLba}" />
+                                            </WrapPanel>
                                         </StackPanel>
                                         <StackPanel>
                                             <TextBlock Text="Partition Array LBA" FontWeight="SemiBold" />
@@ -106,36 +108,74 @@
                                     </UniformGrid>
                                 </Border>
 
-                                <DataGrid Grid.Row="1"
-                                          ItemsSource="{Binding Partitions}"
-                                          SelectedItem="{Binding DataContext.SelectedPartition, ElementName=Root, Mode=TwoWay}"
-                                          AutoGenerateColumns="False"
-                                          HeadersVisibility="All"
-                                          GridLinesVisibility="All"
-                                          RowDetailsVisibilityMode="VisibleWhenSelected"
-                                          BorderThickness="0"
-                                          RowHeight="36"
-                                          SelectionMode="Single">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="#" Binding="{Binding Index}" IsReadOnly="True" Width="40" />
-                                        <DataGridTextColumn Header="Type GUID" Binding="{Binding PartitionTypeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="220" />
-                                        <DataGridTextColumn Header="Partition GUID" Binding="{Binding PartitionGuidText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="220" />
-                                        <DataGridTextColumn Header="First LBA" Binding="{Binding FirstLbaText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="120" />
-                                        <DataGridTextColumn Header="Last LBA" Binding="{Binding LastLbaText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="120" />
-                                        <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="160" />
-                                        <DataGridCheckBoxColumn Header="Required" Binding="{Binding IsRequired, Mode=TwoWay}" Width="80" />
-                                        <DataGridCheckBoxColumn Header="Hidden" Binding="{Binding IsHidden, Mode=TwoWay}" Width="80" />
-                                        <DataGridCheckBoxColumn Header="Shadow" Binding="{Binding IsShadowCopy, Mode=TwoWay}" Width="80" />
-                                        <DataGridCheckBoxColumn Header="Read-Only" Binding="{Binding IsReadOnly, Mode=TwoWay}" Width="80" />
-                                        <DataGridCheckBoxColumn Header="No Drive Letter" Binding="{Binding NoDriveLetter, Mode=TwoWay}" Width="110" />
-                                        <DataGridCheckBoxColumn Header="In Use" Binding="{Binding IsUsed}" IsReadOnly="True" Width="80" />
-                                    </DataGrid.Columns>
-                                    <DataGrid.RowDetailsTemplate>
-                                        <DataTemplate x:DataType="vm:GptPartitionEntryViewModel">
-                                            <TextBlock Text="{Binding ErrorMessage}" Foreground="{DynamicResource ThemeAccentBrush}" Margin="12,4" />
-                                        </DataTemplate>
-                                    </DataGrid.RowDetailsTemplate>
-                                </DataGrid>
+                                <Grid Grid.Row="1" RowDefinitions="Auto,*" RowSpacing="8">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <TextBlock Text="Partitions" FontWeight="SemiBold" />
+                                        <TextBlock Text="{Binding Partitions.Count, StringFormat='({0})'}"
+                                                   Foreground="{DynamicResource ThemeAccentBrush}" />
+                                    </StackPanel>
+
+                                    <ListBox Grid.Row="1"
+                                             ItemsSource="{Binding Partitions}"
+                                             SelectedItem="{Binding DataContext.SelectedPartition, ElementName=Root, Mode=TwoWay}"
+                                             BorderThickness="0"
+                                             Background="Transparent"
+                                             SelectionMode="Single"
+                                             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate x:DataType="vm:GptPartitionEntryViewModel">
+                                                <Border Padding="12"
+                                                        Margin="0,0,0,12"
+                                                        Background="{DynamicResource ThemeBackgroundBrush}"
+                                                        CornerRadius="8">
+                                                    <StackPanel Spacing="12">
+                                                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                                            <TextBlock Text="{Binding Index, StringFormat='Entry #{0}'}"
+                                                                       FontWeight="SemiBold" />
+                                                            <StackPanel Grid.Column="1" Spacing="4">
+                                                                <TextBlock Text="Name" FontWeight="SemiBold" />
+                                                                <TextBox Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                            </StackPanel>
+                                                        </Grid>
+
+                                                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12" RowDefinitions="Auto,Auto" RowSpacing="8">
+                                                            <StackPanel>
+                                                                <TextBlock Text="Type GUID" FontWeight="SemiBold" />
+                                                                <TextBox Text="{Binding PartitionTypeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                            </StackPanel>
+                                                            <StackPanel Grid.Column="1">
+                                                                <TextBlock Text="Partition GUID" FontWeight="SemiBold" />
+                                                                <TextBox Text="{Binding PartitionGuidText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                            </StackPanel>
+                                                            <StackPanel Grid.Row="1">
+                                                                <TextBlock Text="First LBA" FontWeight="SemiBold" />
+                                                                <TextBox Text="{Binding FirstLbaText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                            </StackPanel>
+                                                            <StackPanel Grid.Row="1" Grid.Column="1">
+                                                                <TextBlock Text="Last LBA" FontWeight="SemiBold" />
+                                                                <TextBox Text="{Binding LastLbaText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                            </StackPanel>
+                                                        </Grid>
+
+                                                        <WrapPanel ItemSpacing="12">
+                                                            <CheckBox Content="Required" IsChecked="{Binding IsRequired, Mode=TwoWay}" />
+                                                            <CheckBox Content="Hidden" IsChecked="{Binding IsHidden, Mode=TwoWay}" />
+                                                            <CheckBox Content="Shadow" IsChecked="{Binding IsShadowCopy, Mode=TwoWay}" />
+                                                            <CheckBox Content="Read-Only" IsChecked="{Binding IsReadOnly, Mode=TwoWay}" />
+                                                            <CheckBox Content="No Drive Letter" IsChecked="{Binding NoDriveLetter, Mode=TwoWay}" />
+                                                            <CheckBox Content="In Use" IsChecked="{Binding IsUsed}" IsEnabled="False" />
+                                                        </WrapPanel>
+
+                                                        <TextBlock Text="{Binding ErrorMessage}"
+                                                                   IsVisible="{Binding HasError}"
+                                                                   Foreground="{DynamicResource ThemeAccentBrush}"
+                                                                   TextWrapping="Wrap" />
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </Grid>
                             </Grid>
                         </DataTemplate>
                     </TabControl.ContentTemplate>
