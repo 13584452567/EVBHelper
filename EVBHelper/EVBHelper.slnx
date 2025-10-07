@@ -4,4 +4,5 @@
     <BuildDependency Project="DeviceTreeNode/DeviceTreeNode.csproj" />
   </Project>
   <Project Path="GUIDPartitionTable/GUIDPartitionTable.csproj" />
+  <Project Path="Openix/Openix.csproj" />
 </Solution>
