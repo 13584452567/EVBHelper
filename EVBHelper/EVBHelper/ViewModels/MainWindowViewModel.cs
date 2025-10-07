@@ -2,13 +2,14 @@
 using EVBHelper.Services;
 using EVBHelper.ViewModels.Dtb;
 using EVBHelper.ViewModels.Gpt;
+using EVBHelper.ViewModels.Openix;
 using EVBHelper.ViewModels.Rfel;
 
 namespace EVBHelper.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    public MainWindowViewModel(IRfelCliService rfelCliService, IFileDialogService fileDialogService)
+    public MainWindowViewModel(IRfelCliService rfelCliService, IFileDialogService fileDialogService, IOpenixCardClientService openixCardClientService)
     {
         if (rfelCliService is null)
         {
@@ -20,9 +21,15 @@ public partial class MainWindowViewModel : ViewModelBase
             throw new ArgumentNullException(nameof(fileDialogService));
         }
 
+        if (openixCardClientService is null)
+        {
+            throw new ArgumentNullException(nameof(openixCardClientService));
+        }
+
         Rfel = new RfelViewModel(rfelCliService, fileDialogService);
         DtbEditor = new DtbEditorViewModel(fileDialogService);
         GptEditor = new GptEditorViewModel(fileDialogService);
+        OpenixCard = new OpenixCardViewModel(openixCardClientService, fileDialogService);
     }
 
     public RfelViewModel Rfel { get; }
@@ -30,4 +37,6 @@ public partial class MainWindowViewModel : ViewModelBase
     public DtbEditorViewModel DtbEditor { get; }
 
     public GptEditorViewModel GptEditor { get; }
+
+    public OpenixCardViewModel OpenixCard { get; }
 }

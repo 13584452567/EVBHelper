@@ -54,5 +54,8 @@
         <TabItem Header="GPT">
             <views:GptEditorView DataContext="{Binding GptEditor}" />
         </TabItem>
+        <TabItem Header="OpenixCard">
+            <views:OpenixCardView DataContext="{Binding OpenixCard}" />
+        </TabItem>
     </TabControl>
 </u:UrsaWindow>

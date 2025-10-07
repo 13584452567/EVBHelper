@@ -10,7 +10,7 @@ internal sealed class GenImageWorkflow : IGenImageWorkflow
 {
     private readonly GenImageBuilder _builder = new();
 
-    public async Task<PackContext> PackAsync(string directory, CancellationToken cancellationToken)
+    public async Task<PackContext> PackAsync(string directory, IProgress<OpenixLogMessage>? progress, CancellationToken cancellationToken)
     {
         if (!Directory.Exists(directory))
         {
@@ -25,7 +25,7 @@ internal sealed class GenImageWorkflow : IGenImageWorkflow
         if (!File.Exists(outputImagePath))
         {
             var expected = DeterminePrimaryImageName(cfgPath) ?? outputImagePath;
-            Logger.Warning($"未在预期路径找到生成的镜像文件: {expected}。");
+            progress?.Report(OpenixLogMessage.Warning($"未在预期路径找到生成的镜像文件: {expected}。"));
         }
 
         return new PackContext
@@ -36,7 +36,7 @@ internal sealed class GenImageWorkflow : IGenImageWorkflow
         };
     }
 
-    public async Task<PackContext> DumpAsync(UnpackContext context, string cfgPath, CancellationToken cancellationToken)
+    public async Task<PackContext> DumpAsync(UnpackContext context, string cfgPath, IProgress<OpenixLogMessage>? progress, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(context);
         if (!File.Exists(cfgPath))

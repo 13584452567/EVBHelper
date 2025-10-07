@@ -34,5 +34,6 @@
   <ItemGroup>
     <ProjectReference Include="..\DeviceTreeNode\DeviceTreeNode.csproj" />
     <ProjectReference Include="..\GUIDPartitionTable\GUIDPartitionTable.csproj" />
+    <ProjectReference Include="..\Openix\Openix.csproj" />
   </ItemGroup>
 </Project>

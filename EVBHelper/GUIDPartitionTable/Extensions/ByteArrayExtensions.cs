@@ -1,3 +1,5 @@
+using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace DiskPartitionInfo.Extensions
@@ -7,19 +9,18 @@ namespace DiskPartitionInfo.Extensions
         internal static T ToStruct<T>(this byte[] bytes)
             where T : struct
         {
-            T result;
-            var handle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
-
-            try
+            if (bytes is null)
             {
-                result = Marshal.PtrToStructure<T>(handle.AddrOfPinnedObject())!;
-            }
-            finally
-            {
-                handle.Free();
+                throw new ArgumentNullException(nameof(bytes));
             }
 
-            return result;
+            var expectedLength = Unsafe.SizeOf<T>();
+            if (bytes.Length < expectedLength)
+            {
+                throw new ArgumentException($"Byte buffer too small for {typeof(T)}. Expected at least {expectedLength} bytes but received {bytes.Length}.", nameof(bytes));
+            }
+
+            return MemoryMarshal.Read<T>(bytes.AsSpan());
         }
     }
 }

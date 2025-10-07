@@ -13,6 +13,8 @@ namespace EVBHelper.Services
         Task<string?> OpenFileAsync(FileDialogRequest request, CancellationToken cancellationToken = default);
 
         Task<string?> SaveFileAsync(FileDialogRequest request, CancellationToken cancellationToken = default);
+
+        Task<string?> OpenFolderAsync(FolderDialogRequest request, CancellationToken cancellationToken = default);
     }
 
     public sealed class FileDialogRequest
@@ -26,6 +28,13 @@ namespace EVBHelper.Services
         public string? SuggestedFileName { get; init; }
 
         public string? DefaultExtension { get; init; }
+    }
+
+    public sealed class FolderDialogRequest
+    {
+        public string? Title { get; init; }
+
+        public bool AllowMultiple { get; init; }
     }
 
     public sealed class DesktopFileDialogService : IFileDialogService
@@ -90,6 +99,30 @@ namespace EVBHelper.Services
 
             var result = await _owner.StorageProvider.SaveFilePickerAsync(options).ConfigureAwait(true);
             return result?.Path.LocalPath;
+        }
+
+        public async Task<string?> OpenFolderAsync(FolderDialogRequest request, CancellationToken cancellationToken = default)
+        {
+            if (!_owner.StorageProvider.CanPickFolder)
+            {
+                return null;
+            }
+
+            var options = new FolderPickerOpenOptions
+            {
+                Title = request.Title,
+                AllowMultiple = request.AllowMultiple
+            };
+
+            var result = await _owner.StorageProvider.OpenFolderPickerAsync(options).ConfigureAwait(true);
+            if (result is null || result.Count == 0)
+            {
+                return null;
+            }
+
+            return request.AllowMultiple
+                ? string.Join(";", result.Select(static folder => folder.Path.LocalPath))
+                : result[0].Path.LocalPath;
         }
     }
 }

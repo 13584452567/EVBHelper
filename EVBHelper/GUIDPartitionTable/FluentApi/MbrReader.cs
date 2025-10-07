@@ -1,3 +1,4 @@
+using System.IO;
 using DiskPartitionInfo.Extensions;
 using DiskPartitionInfo.Mbr;
 using DiskPartitionInfo.Models;
@@ -20,7 +21,7 @@ namespace DiskPartitionInfo.FluentApi
         public MasterBootRecord FromStream(Stream stream)
         {
             var data = new byte[MbrLength];
-            stream.Read(buffer: data, offset: 0, count: MbrLength);
+            stream.ReadExactly(data);
 
             var mbr = data.ToStruct<ClassicalMasterBootRecord>();
             return new MasterBootRecord(mbr);

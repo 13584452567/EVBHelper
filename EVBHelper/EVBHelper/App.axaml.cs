@@ -25,8 +25,9 @@ namespace EVBHelper
 
                 var mainWindow = new MainWindow();
                 var rfelCliService = new Services.RfelCliService();
+                var openixCardClientService = new Services.OpenixCardClientService();
                 var fileDialogService = new Services.DesktopFileDialogService(mainWindow);
-                mainWindow.DataContext = new MainWindowViewModel(rfelCliService, fileDialogService);
+                mainWindow.DataContext = new MainWindowViewModel(rfelCliService, fileDialogService, openixCardClientService);
 
                 desktop.MainWindow = mainWindow;
             }

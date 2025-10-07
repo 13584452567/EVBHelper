@@ -9,7 +9,7 @@ namespace Openix.Services;
 
 internal sealed class ImageUnpacker : IImageUnpacker
 {
-    public Task<UnpackContext> UnpackAsync(string inputImagePath, CancellationToken cancellationToken)
+    public Task<UnpackContext> UnpackAsync(string inputImagePath, IProgress<OpenixLogMessage>? progress, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(inputImagePath))
         {
@@ -110,7 +110,7 @@ internal sealed class ImageUnpacker : IImageUnpacker
             File.WriteAllBytes(targetPath, data);
         }
 
-        Logger.Info($"已生成解包目录: {outputDirectory}");
+        progress?.Report(OpenixLogMessage.Info($"已生成解包目录: {outputDirectory}"));
 
         return Task.FromResult(new UnpackContext
         {

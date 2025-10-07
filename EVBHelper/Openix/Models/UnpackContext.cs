@@ -1,6 +1,9 @@
 namespace Openix.Models;
 
-internal sealed class UnpackContext
+/// <summary>
+/// Provides contextual data about an unpacked image.
+/// </summary>
+public sealed class UnpackContext
 {
     public required string InputImagePath { get; init; }
     public required string OutputDirectory { get; init; }
