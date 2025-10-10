@@ -5,6 +5,7 @@
               xmlns:models="using:EVBHelper.Models"
               xmlns:views="using:EVBHelper.Views"
               xmlns:rfel="using:EVBHelper.Views.Rfel"
+              xmlns:openiximg="using:EVBHelper.Views"
               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
               xmlns:u="https://irihi.tech/ursa"
@@ -56,6 +57,9 @@
         </TabItem>
         <TabItem Header="OpenixCard">
             <views:OpenixCardView DataContext="{Binding OpenixCard}" />
+        </TabItem>
+        <TabItem Header="OpenixIMG">
+            <views:OpenixImgView DataContext="{Binding OpenixImg}" />
         </TabItem>
     </TabControl>
 </u:UrsaWindow>

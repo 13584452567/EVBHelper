@@ -6,4 +6,5 @@
   </Project>
   <Project Path="GUIDPartitionTable/GUIDPartitionTable.csproj" />
   <Project Path="OpenixCard/OpenixCard.csproj" />
+  <Project Path="OpenixIMG/OpenixIMG.csproj" />
 </Solution>

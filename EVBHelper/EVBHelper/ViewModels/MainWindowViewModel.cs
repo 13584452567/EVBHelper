@@ -3,6 +3,7 @@ using EVBHelper.Services;
 using EVBHelper.ViewModels.Dtb;
 using EVBHelper.ViewModels.Gpt;
 using EVBHelper.ViewModels.OpenixCard;
+using EVBHelper.ViewModels.OpenixIMG;
 using EVBHelper.ViewModels.Rfel;
 
 namespace EVBHelper.ViewModels;
@@ -30,6 +31,7 @@ public partial class MainWindowViewModel : ViewModelBase
         DtbEditor = new DtbEditorViewModel(fileDialogService);
         GptEditor = new GptEditorViewModel(fileDialogService);
         OpenixCard = new OpenixCardViewModel(openixCardClientService, fileDialogService);
+        OpenixImg = new OpenixImgViewModel(new Services.OpenixIMG.OpenixImgService(), fileDialogService);
     }
 
     public RfelViewModel Rfel { get; }
@@ -39,4 +41,6 @@ public partial class MainWindowViewModel : ViewModelBase
     public GptEditorViewModel GptEditor { get; }
 
     public OpenixCardViewModel OpenixCard { get; }
+
+    public OpenixImgViewModel OpenixImg { get; }
 }
