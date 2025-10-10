@@ -36,7 +36,7 @@
                               IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}" />
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Spacing="8">
+        <StackPanel Orientation="Horizontal" Spacing="8">
                     <Button Content="Unpack"
                             Command="{Binding UnpackCommand}"
                             Theme="{DynamicResource SolidButton}"
@@ -45,10 +45,18 @@
                             Command="{Binding DecryptCommand}"
                             Theme="{DynamicResource SolidButton}"
                             Classes="Secondary" />
-                    <Button Content="Show Partitions"
+            <Button Content="Show Partitions"
                             Command="{Binding ShowPartitionCommand}"
                             Theme="{DynamicResource SolidButton}"
                             Classes="Secondary" />
+            <Button Content="Inspect"
+                Command="{Binding InspectCommand}"
+                Theme="{DynamicResource SolidButton}"
+                Classes="Secondary" />
+            <Button Content="Pack"
+                Command="{Binding PackCommand}"
+                Theme="{DynamicResource SolidButton}"
+                Classes="Success" />
                 </StackPanel>
 
                 <Separator />
@@ -84,14 +92,51 @@
             </StackPanel>
         </Border>
 
-        <Border Grid.Column="1" Padding="16" CornerRadius="12" Background="{DynamicResource ThemeControlMidBrush}">
-            <Grid RowDefinitions="Auto,*" RowSpacing="12">
+        <Grid Grid.Column="1" RowDefinitions="Auto,*,Auto,*" RowSpacing="12">
+            <Border Padding="16" CornerRadius="12" Background="{DynamicResource ThemeControlMidBrush}">
+                <StackPanel Orientation="Horizontal" Spacing="16">
+                    <TextBlock Text="Header" FontSize="18" FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding HeaderSummary}" />
+                    <TextBlock Text="Encrypted:" />
+                    <TextBlock Text="{Binding IsEncrypted}" FontWeight="SemiBold" />
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Row="1" Padding="12" CornerRadius="12" Background="{DynamicResource ThemeControlMidBrush}">
+                <Grid RowDefinitions="Auto,Auto,*" RowSpacing="6">
+                    <TextBlock Text="Files" FontSize="16" FontWeight="SemiBold" />
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8">
+                        <Button Content="Export Selected" Command="{Binding ExportSelectedCommand}" />
+                    </StackPanel>
+                    <DataGrid Grid.Row="2"
+                              ItemsSource="{Binding Files}"
+                              SelectedItem="{Binding SelectedFile, Mode=TwoWay}"
+                              AutoGenerateColumns="False"
+                              CanUserSortColumns="True"
+                              HeadersVisibility="Column"
+                              IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="#" Binding="{Binding Index}" Width="40"/>
+                            <DataGridTextColumn Header="MainType" Binding="{Binding MainType}"/>
+                            <DataGridTextColumn Header="SubType" Binding="{Binding SubType}"/>
+                            <DataGridTextColumn Header="FileName" Binding="{Binding FileName}" Width="2*"/>
+                            <DataGridTextColumn Header="Original" Binding="{Binding OriginalLength}"/>
+                            <DataGridTextColumn Header="Stored" Binding="{Binding StoredLength}"/>
+                            <DataGridTextColumn Header="Offset" Binding="{Binding Offset}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="2" Padding="16" CornerRadius="12" Background="{DynamicResource ThemeControlMidBrush}">
                 <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
                     <TextBlock Text="Logs" FontSize="18" FontWeight="SemiBold" />
                     <TextBlock Text="{Binding Logs.Count, StringFormat='({0})'}" Foreground="{DynamicResource ThemeAccentBrush}" />
                 </StackPanel>
+            </Border>
 
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <Border Grid.Row="3" Padding="16" CornerRadius="12" Background="{DynamicResource ThemeControlMidBrush}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                     <ItemsControl ItemsSource="{Binding Logs}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="models:OpenixLogEntry">
@@ -104,7 +149,7 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </ScrollViewer>
-            </Grid>
-        </Border>
+            </Border>
+        </Grid>
     </Grid>
 </UserControl>

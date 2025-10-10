@@ -61,13 +61,11 @@ namespace OpenixIMG
 
                 var headerBytes = new byte[1024];
                 Array.Copy(_imageData, 0, headerBytes, 0, 1024);
-                // 检测是否为明文头（是否包含 magic）
                 var magic = Encoding.ASCII.GetString(headerBytes, 0, OpenixIMGWTY.IMAGEWTY_MAGIC_LEN);
                 _isEncrypted = magic != OpenixIMGWTY.IMAGEWTY_MAGIC;
 
                 if (_isEncrypted)
                 {
-                    // 加密镜像：先解密头部再解析
                     ProcessData(_headerCipher, headerBytes, 0, 1024);
                     if (_verbose) Console.WriteLine("Detected encrypted image. Decrypting header.");
                 }
@@ -170,14 +168,12 @@ namespace OpenixIMG
 
                     if (_outputFormat == OutputFormat.UNIMG)
                     {
-                        // UNIMG：输出头文件和内容文件到根目录
                         var hdrName = $"{maintype}_{subtype}.hdr";
                         var contName = $"{maintype}_{subtype}";
 
                         var hdrPath = Path.Combine(outputDir, hdrName);
                         var contPath = Path.Combine(outputDir, contName);
 
-                        // 写 header：使用解密后的原始 1024 字节
                         if (_fileHeadersRaw != null && _fileHeadersRaw.Length >= (i + 1) * 1024)
                         {
                             var oneHdr = new byte[1024];
@@ -186,7 +182,6 @@ namespace OpenixIMG
                         }
                         else
                         {
-                            // 兜底：从结构体再序列化
                             var oneHdr = StructureToByteArray(fileHeader, 1024);
                             File.WriteAllBytes(hdrPath, oneHdr);
                         }
@@ -269,8 +264,6 @@ namespace OpenixIMG
             }
             return null;
         }
-
-        // 参考 C++ decryptImage 实现完整镜像解密输出
         public bool DecryptImage(string outputFile)
         {
             try
@@ -281,22 +274,18 @@ namespace OpenixIMG
                     return false;
                 }
 
-                // 复制一份数据用于就地解密
                 var decryptedImageData = new byte[_imageData.Length];
                 Array.Copy(_imageData, decryptedImageData, _imageData.Length);
 
                 if (_isEncrypted)
                 {
-                    // 处理 Header：先用原始加密头，再对副本进行解密
                     ProcessData(_headerCipher, decryptedImageData, 0, 1024);
 
-                    // 从解密后的头获取文件数
                     var headerBytes = new byte[1024];
                     Array.Copy(decryptedImageData, 0, headerBytes, 0, 1024);
                     var decHeader = ByteArrayToStructure<ImageHeader>(headerBytes);
                     uint numFiles = decHeader.header_version == 0x0300 ? decHeader.v3.num_files : decHeader.v1.num_files;
 
-                    // 处理文件头区
                     int fhdrOffset = 1024;
                     int fhdrLength = checked((int)(numFiles * 1024));
                     if (fhdrLength > 0)
@@ -304,7 +293,6 @@ namespace OpenixIMG
                         ProcessData(_fileHeadersCipher, decryptedImageData, fhdrOffset, fhdrLength);
                     }
 
-                    // 从已解密的文件头读取每个条目，按 offset 定位解密内容区
                     for (int i = 0; i < numFiles; i++)
                     {
                         var oneHdr = new byte[1024];
@@ -321,7 +309,6 @@ namespace OpenixIMG
                     }
                 }
 
-                // 写出解密镜像
                 File.WriteAllBytes(outputFile, decryptedImageData);
                 if (_verbose) Console.WriteLine($"Successfully decrypted image to {outputFile}");
                 return true;
@@ -457,7 +444,6 @@ namespace OpenixIMG
             }
             if (cipher == _fileContentCipher)
             {
-                // 与 C++ RC6 文件内容 key 对齐：末字节为 'g'
                 var key = new byte[32];
                 for (int i = 0; i < 31; i++) key[i] = 2;
                 key[31] = (byte)'g';

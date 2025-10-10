@@ -10,6 +10,7 @@ using EVBHelper.Models;
 using EVBHelper.Services;
 using EVBHelper.Services.OpenixIMG;
 using OpenixCard.Logging;
+using OpenixIMG;
 
 namespace EVBHelper.ViewModels.OpenixIMG;
 
@@ -46,6 +47,17 @@ public sealed partial class OpenixImgViewModel : ViewModelBase
 
     [ObservableProperty]
     private string? _partitionSummary;
+
+    [ObservableProperty]
+    private string? _headerSummary;
+
+    [ObservableProperty]
+    private bool _isEncrypted;
+
+    public ObservableCollection<FileEntryItem> Files { get; } = new();
+
+    [ObservableProperty]
+    private FileEntryItem? _selectedFile;
 
     public OpenixImgViewModel(IOpenixImgService service, IFileDialogService fileDialogService)
     {
@@ -129,6 +141,78 @@ public sealed partial class OpenixImgViewModel : ViewModelBase
             });
     }
 
+    [RelayCommand(CanExecute = nameof(CanRun))]
+    private Task InspectAsync()
+    {
+        return RunAsync(
+            startMsg: "Inspecting image...",
+            op: async (_, token) =>
+            {
+                EnsureFile(InputImagePath, "Please select a valid image file");
+                Files.Clear();
+                var res = await _service.InspectAsync(InputImagePath, token).ConfigureAwait(true);
+                IsEncrypted = res.IsEncrypted;
+                HeaderSummary = $"ver=0x{res.Header.version:x}, files={(res.Files?.Length ?? 0)}, pid=0x{(res.Header.header_version==0x0300?res.Header.v3.pid:res.Header.v1.pid):x}, vid=0x{(res.Header.header_version==0x0300?res.Header.v3.vid:res.Header.v1.vid):x}";
+                if (res.Files != null)
+                {
+                    uint ver = res.Header.header_version;
+                    for (int i = 0; i < res.Files.Length; i++)
+                    {
+                        var fh = res.Files[i];
+                        var maintype = System.Text.Encoding.ASCII.GetString(fh.maintype).TrimEnd('\0', ' ');
+                        var subtype = System.Text.Encoding.ASCII.GetString(fh.subtype).TrimEnd('\0', ' ');
+                        string? filename = ver == 0x0300 ? fh.v3.filename : fh.v1.filename;
+                        uint orig = ver == 0x0300 ? fh.v3.original_length : fh.v1.original_length;
+                        uint stored = ver == 0x0300 ? fh.v3.stored_length : fh.v1.stored_length;
+                        uint offset = ver == 0x0300 ? fh.v3.offset : fh.v1.offset;
+                        Files.Add(new FileEntryItem(i, maintype, subtype, filename ?? string.Empty, orig, stored, offset));
+                    }
+                }
+            });
+    }
+
+    [RelayCommand(CanExecute = nameof(CanRun))]
+    private Task PackAsync()
+    {
+        return RunAsync(
+            startMsg: "Packing...",
+            op: async (progress, token) =>
+            {
+                var filters = new[] { new FilePickerFileType("Image") { Patterns = new[] { "*.img" } }, FilePickerFileTypes.All };
+                var saveReq = new FileDialogRequest { Title = "Save image as", Filters = filters, DefaultExtension = "img" };
+                var outFile = await _fileDialogService.SaveFileAsync(saveReq, token).ConfigureAwait(true);
+                if (string.IsNullOrWhiteSpace(outFile)) return;
+
+                var folderReq = new FolderDialogRequest { Title = "Select folder containing image.cfg" };
+                var folder = await _fileDialogService.OpenFolderAsync(folderReq, token).ConfigureAwait(true);
+                if (string.IsNullOrWhiteSpace(folder)) return;
+
+                await _service.PackAsync(folder, outFile!, progress, token).ConfigureAwait(true);
+                Log(OpenixLogMessage.Info($"Packed: {outFile}"));
+            });
+    }
+
+    [RelayCommand(CanExecute = nameof(CanRun))]
+    private Task ExportSelectedAsync()
+    {
+        return RunAsync(
+            startMsg: "Exporting file...",
+            op: async (_, token) =>
+            {
+                EnsureFile(InputImagePath, "Please select a valid image file");
+                if (SelectedFile is null || string.IsNullOrWhiteSpace(SelectedFile.FileName)) return;
+                var saveReq = new FileDialogRequest
+                {
+                    Title = $"Save '{SelectedFile.FileName}' as",
+                    SuggestedFileName = Path.GetFileName(SelectedFile.FileName)
+                };
+                var savePath = await _fileDialogService.SaveFileAsync(saveReq, token).ConfigureAwait(true);
+                if (string.IsNullOrWhiteSpace(savePath)) return;
+                await _service.ExportFileAsync(InputImagePath, SelectedFile.FileName, savePath!, token).ConfigureAwait(true);
+                Log(OpenixLogMessage.Info($"Exported: {savePath}"));
+            });
+    }
+
     [RelayCommand(CanExecute = nameof(CanCancel))]
     private void Cancel()
     {
@@ -203,6 +287,11 @@ public sealed partial class OpenixImgViewModel : ViewModelBase
         UnpackCommand.NotifyCanExecuteChanged();
         DecryptCommand.NotifyCanExecuteChanged();
         ShowPartitionCommand.NotifyCanExecuteChanged();
+    InspectCommand.NotifyCanExecuteChanged();
+    PackCommand.NotifyCanExecuteChanged();
+        ExportSelectedCommand.NotifyCanExecuteChanged();
         CancelCommand.NotifyCanExecuteChanged();
     }
 }
+
+public sealed record FileEntryItem(int Index, string MainType, string SubType, string FileName, uint OriginalLength, uint StoredLength, uint Offset);
