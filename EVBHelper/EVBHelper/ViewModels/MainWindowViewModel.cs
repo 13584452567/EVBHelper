@@ -2,7 +2,7 @@
 using EVBHelper.Services;
 using EVBHelper.ViewModels.Dtb;
 using EVBHelper.ViewModels.Gpt;
-using EVBHelper.ViewModels.Openix;
+using EVBHelper.ViewModels.OpenixCard;
 using EVBHelper.ViewModels.Rfel;
 
 namespace EVBHelper.ViewModels;

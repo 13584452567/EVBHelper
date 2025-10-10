@@ -2,7 +2,7 @@ using Avalonia;
 using Avalonia.Data.Converters;
 using Avalonia.Media;
 using Avalonia.Styling;
-using Openix.Logging;
+using OpenixCard.Logging;
 using System;
 using System.Globalization;
 

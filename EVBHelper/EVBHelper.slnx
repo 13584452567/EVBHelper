@@ -2,7 +2,8 @@
   <Project Path="DeviceTreeNode/DeviceTreeNode.csproj" />
   <Project Path="EVBHelper/EVBHelper.csproj">
     <BuildDependency Project="DeviceTreeNode/DeviceTreeNode.csproj" />
+    <BuildDependency Project="OpenixCard/OpenixCard.csproj" />
   </Project>
   <Project Path="GUIDPartitionTable/GUIDPartitionTable.csproj" />
-  <Project Path="Openix/Openix.csproj" />
+  <Project Path="OpenixCard/OpenixCard.csproj" />
 </Solution>

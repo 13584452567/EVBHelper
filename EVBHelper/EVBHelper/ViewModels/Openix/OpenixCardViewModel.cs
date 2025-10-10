@@ -9,10 +9,10 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using EVBHelper.Models;
 using EVBHelper.Services;
-using Openix.Logging;
-using Openix.Models;
+using OpenixCard.Logging;
+using OpenixCard.Models;
 
-namespace EVBHelper.ViewModels.Openix;
+namespace EVBHelper.ViewModels.OpenixCard;
 
 public sealed partial class OpenixCardViewModel : ViewModelBase
 {
@@ -73,7 +73,7 @@ public sealed partial class OpenixCardViewModel : ViewModelBase
 
 		var request = new FileDialogRequest
 		{
-			Title = "Select Openix image file",
+			Title = "Select OpenixCard image file",
 			Filters = filters,
 			AllowMultiple = false
 		};

@@ -1,8 +1,8 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Openix.Logging;
-using Openix.Models;
+using OpenixCard.Logging;
+using OpenixCard.Models;
 
 namespace EVBHelper.Services;
 
