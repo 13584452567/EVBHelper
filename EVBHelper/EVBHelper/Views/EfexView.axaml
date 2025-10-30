@@ -20,7 +20,7 @@
             </StackPanel>
         </StackPanel>
 
-        <Grid Grid.Row="1" Grid.Column="0" ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto,Auto" Gap="10">
+        <Grid Grid.Row="1" Grid.Column="0" ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="10" ColumnSpacing="10">
             <Label Content="Address:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
             <TextBox Text="{Binding Address}" Grid.Row="0" Grid.Column="1"/>
             
@@ -33,25 +33,27 @@
         </Grid>
 
         <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Spacing="10" Margin="0,10,0,0">
-            <GroupBox Header="FEL Mode">
+            <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="4" Padding="5">
                 <StackPanel Spacing="5">
+                    <TextBlock Text="FEL Mode" FontWeight="Bold"/>
                     <Button Content="Execute" Command="{Binding FelExecuteCommand}"/>
                     <Button Content="Read to File" Command="{Binding FelReadCommand}"/>
                     <Button Content="Write from File" Command="{Binding FelWriteCommand}"/>
                 </StackPanel>
-            </GroupBox>
+            </Border>
 
-            <GroupBox Header="FES Mode">
+            <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="4" Padding="5">
                 <StackPanel Spacing="5">
+                    <TextBlock Text="FES Mode" FontWeight="Bold"/>
                     <Button Content="Query Storage" Command="{Binding FesQueryStorageCommand}"/>
                     <Button Content="Query Secure" Command="{Binding FesQuerySecureCommand}"/>
                     <Button Content="Probe Flash Size" Command="{Binding FesProbeFlashSizeCommand}"/>
                     <Button Content="Get Chip ID" Command="{Binding FesGetChipIdCommand}"/>
                 </StackPanel>
-            </GroupBox>
+            </Border>
         </StackPanel>
         
-        <TextBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,10,0,0" Text="{Binding LogOutput}" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
+        <TextBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,10,0,0" Text="{Binding LogOutput}" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
 
     </Grid>
 </UserControl>

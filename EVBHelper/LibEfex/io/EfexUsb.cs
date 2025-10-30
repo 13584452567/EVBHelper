@@ -43,7 +43,7 @@ public static class EfexUsb
 
         try
         {
-            ctx.Device.ControlTransfer(requestType, request, 0, 0, null, (ushort)length);
+            ctx.Device.ControlTransfer(requestType, request, 0, 0, Array.Empty<byte>(), (ushort)length);
         }
         catch (Exception)
         {

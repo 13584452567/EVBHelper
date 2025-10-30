@@ -149,11 +149,13 @@ public partial class EfexViewModel : ViewModelBase
     {
         if (!IsConnected() || !ParseAddress(out var addr) || !ParseLength(out var len)) return;
 
-        if (string.IsNullOrEmpty(FilePath))
+        var savePath = await _fileDialogService.SaveFileAsync(new FileDialogRequest());
+        if (string.IsNullOrEmpty(savePath))
         {
-            Log("Please select a file to save the data.");
+            Log("Save file operation cancelled.");
             return;
         }
+        FilePath = savePath;
 
         try
         {
@@ -176,7 +178,11 @@ public partial class EfexViewModel : ViewModelBase
         if (string.IsNullOrEmpty(FilePath) || !File.Exists(FilePath))
         {
             Log("Please select a valid file to write.");
-            return;
+            await BrowseFile();
+            if (string.IsNullOrEmpty(FilePath) || !File.Exists(FilePath))
+            {
+                return;
+            }
         }
 
         try
