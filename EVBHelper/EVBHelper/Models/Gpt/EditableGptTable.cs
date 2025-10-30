@@ -118,10 +118,10 @@ public sealed class EditableGptTable
 
     public byte[] BuildPartitionArray()
     {
-    EnsureCapacity();
-    int entrySize = checked((int)PartitionEntryLength);
-    int totalLength = checked(entrySize * (int)PartitionsCount);
-    var buffer = new byte[totalLength];
+        EnsureCapacity();
+        int entrySize = checked((int)PartitionEntryLength);
+        int totalLength = checked(entrySize * (int)PartitionsCount);
+        var buffer = new byte[totalLength];
 
         for (int i = 0; i < Partitions.Count; i++)
         {
@@ -146,9 +146,9 @@ public sealed class EditableGptTable
 
         HeaderBytes.CopyTo(headerSpan);
 
-    var signatureSpan = headerSpan.Slice(0, 8);
-    signatureSpan.Clear();
-    Encoding.ASCII.GetBytes(EfiSignature.AsSpan(), signatureSpan);
+        var signatureSpan = headerSpan.Slice(0, 8);
+        signatureSpan.Clear();
+        Encoding.ASCII.GetBytes(EfiSignature.AsSpan(), signatureSpan);
 
         if (Revision.Length >= 4)
         {

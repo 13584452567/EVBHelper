@@ -28,11 +28,11 @@ internal sealed class ImageHeader
             throw new ArgumentException("Header buffer must be at least 1024 bytes", nameof(buffer));
         }
 
-    var headerVersion = BinaryPrimitives.ReadUInt32LittleEndian(buffer[8..12]);
-    var headerSize = BinaryPrimitives.ReadUInt32LittleEndian(buffer[12..16]);
-    var formatVersion = BinaryPrimitives.ReadUInt32LittleEndian(buffer[20..24]);
-    var imageSize = BinaryPrimitives.ReadUInt32LittleEndian(buffer[24..28]);
-    var imageHeaderSize = BinaryPrimitives.ReadUInt32LittleEndian(buffer[28..32]);
+        var headerVersion = BinaryPrimitives.ReadUInt32LittleEndian(buffer[8..12]);
+        var headerSize = BinaryPrimitives.ReadUInt32LittleEndian(buffer[12..16]);
+        var formatVersion = BinaryPrimitives.ReadUInt32LittleEndian(buffer[20..24]);
+        var imageSize = BinaryPrimitives.ReadUInt32LittleEndian(buffer[24..28]);
+        var imageHeaderSize = BinaryPrimitives.ReadUInt32LittleEndian(buffer[28..32]);
 
         uint numFiles;
         uint hardwareId;

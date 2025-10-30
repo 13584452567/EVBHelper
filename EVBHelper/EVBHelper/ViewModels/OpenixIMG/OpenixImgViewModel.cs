@@ -1,17 +1,16 @@
-using System;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 using Avalonia.Platform.Storage;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using EVBHelper.Models;
 using EVBHelper.Services;
 using EVBHelper.Services.OpenixIMG;
 using OpenixCard.Logging;
-using OpenixIMG;
-using Avalonia.Threading;
+using System;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace EVBHelper.ViewModels.OpenixIMG;
 
@@ -167,7 +166,7 @@ public sealed partial class OpenixImgViewModel : ViewModelBase
                         items.Add(new FileEntryItem(i, maintype, subtype, filename ?? string.Empty, orig, stored, offset));
                     }
                 }
-                var headerText = $"ver=0x{res.Header.version:x}, files={(res.Files?.Length ?? 0)}, pid=0x{(res.Header.header_version==0x0300?res.Header.v3.pid:res.Header.v1.pid):x}, vid=0x{(res.Header.header_version==0x0300?res.Header.v3.vid:res.Header.v1.vid):x}";
+                var headerText = $"ver=0x{res.Header.version:x}, files={(res.Files?.Length ?? 0)}, pid=0x{(res.Header.header_version == 0x0300 ? res.Header.v3.pid : res.Header.v1.pid):x}, vid=0x{(res.Header.header_version == 0x0300 ? res.Header.v3.vid : res.Header.v1.vid):x}";
                 Dispatcher.UIThread.Post(() =>
                 {
                     IsEncrypted = res.IsEncrypted;
@@ -297,8 +296,8 @@ public sealed partial class OpenixImgViewModel : ViewModelBase
         UnpackCommand.NotifyCanExecuteChanged();
         DecryptCommand.NotifyCanExecuteChanged();
         ShowPartitionCommand.NotifyCanExecuteChanged();
-    InspectCommand.NotifyCanExecuteChanged();
-    PackCommand.NotifyCanExecuteChanged();
+        InspectCommand.NotifyCanExecuteChanged();
+        PackCommand.NotifyCanExecuteChanged();
         ExportSelectedCommand.NotifyCanExecuteChanged();
         CancelCommand.NotifyCanExecuteChanged();
     }

@@ -1,4 +1,3 @@
-using System.IO;
 using DiskPartitionInfo.Extensions;
 using DiskPartitionInfo.Mbr;
 using DiskPartitionInfo.Models;

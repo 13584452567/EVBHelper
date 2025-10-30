@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-
 namespace OpenixIMG
 {
     public class Variable
@@ -20,7 +14,7 @@ namespace OpenixIMG
             Type = type;
             _value = value;
         }
-        
+
         public Variable(string name, object value, ValueType type) : this(name, type, value)
         {
         }

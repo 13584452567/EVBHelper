@@ -1,5 +1,3 @@
-using System;
-
 namespace OpenixIMG
 {
     public interface IBlockCipher

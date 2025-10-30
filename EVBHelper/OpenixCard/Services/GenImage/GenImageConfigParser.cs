@@ -1,6 +1,5 @@
-using System.Globalization;
-
 using OpenixCard.Models;
+using System.Globalization;
 namespace OpenixCard.Services.GenImage;
 
 internal static class GenImageConfigParser
@@ -8,7 +7,7 @@ internal static class GenImageConfigParser
     public static GenImageConfig Parse(string configPath)
     {
         var lines = File.ReadAllLines(configPath);
-    var parser = new ParserState();
+        var parser = new ParserState();
 
         foreach (var rawLine in lines)
         {

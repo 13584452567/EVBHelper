@@ -1,8 +1,6 @@
 //using Org.BouncyCastle.Crypto;
 //using Org.BouncyCastle.Crypto.Engines;
 //using Org.BouncyCastle.Crypto.Parameters;
-using System;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -10,19 +8,19 @@ namespace OpenixIMG
 {
     public class OpenixPacker
     {
-    private readonly IBlockCipher _headerCipher = new RC6Engine();
-    private readonly IBlockCipher _fileHeadersCipher = new RC6Engine();
+        private readonly IBlockCipher _headerCipher = new RC6Engine();
+        private readonly IBlockCipher _fileHeadersCipher = new RC6Engine();
 
-    private readonly IBlockCipher _fileContentCipher = new RC6Engine();
+        private readonly IBlockCipher _fileContentCipher = new RC6Engine();
         private readonly bool _verbose;
         private bool _imageLoaded;
         private string _imageFilePath = "";
         private byte[] _imageData = Array.Empty<byte>();
         private ImageHeader _imageHeader;
         private FileHeader[] _fileHeaders = Array.Empty<FileHeader>();
-    private bool _isEncrypted = false;
-    private OutputFormat _outputFormat = OutputFormat.UNIMG;
-    private byte[] _fileHeadersRaw = Array.Empty<byte>();
+        private bool _isEncrypted = false;
+        private OutputFormat _outputFormat = OutputFormat.UNIMG;
+        private byte[] _fileHeadersRaw = Array.Empty<byte>();
 
         public OpenixPacker(bool verbose = false)
         {

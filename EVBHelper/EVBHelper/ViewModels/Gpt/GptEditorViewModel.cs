@@ -23,7 +23,7 @@ public partial class GptEditorViewModel : ViewModelBase
     {
         _fileDialogService = fileDialogService ?? throw new ArgumentNullException(nameof(fileDialogService));
         Tables = new ObservableCollection<GptTableViewModel>();
-    StatusMessage = "Select a GPT file.";
+        StatusMessage = "Select a GPT file.";
     }
 
     public ObservableCollection<GptTableViewModel> Tables { get; }
@@ -149,7 +149,7 @@ public partial class GptEditorViewModel : ViewModelBase
         slot.LastLbaText = "0";
         SelectedPartition = slot;
         SelectedTable.MarkDirty();
-    StatusMessage = $"Activated partition slot #{slot.Index}.";
+        StatusMessage = $"Activated partition slot #{slot.Index}.";
         UpdateDirtyState();
     }
 
@@ -162,7 +162,7 @@ public partial class GptEditorViewModel : ViewModelBase
         }
 
         SelectedTable.RemovePartition(SelectedPartition);
-    StatusMessage = $"Cleared partition slot #{SelectedPartition.Index}.";
+        StatusMessage = $"Cleared partition slot #{SelectedPartition.Index}.";
         SelectedPartition = null;
         UpdateDirtyState();
     }
@@ -313,7 +313,7 @@ public partial class GptEditorViewModel : ViewModelBase
         CurrentFilePath = null;
         SelectedTable = null;
         SelectedPartition = null;
-    StatusMessage = "Select a GPT file.";
+        StatusMessage = "Select a GPT file.";
         UpdateDirtyState();
         UpdateErrorState();
     }

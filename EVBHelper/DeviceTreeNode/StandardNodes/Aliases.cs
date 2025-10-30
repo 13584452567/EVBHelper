@@ -1,5 +1,4 @@
 ﻿using DeviceTreeNode.Nodes;
-using System;
 
 namespace DeviceTreeNode.StandardNodes
 {

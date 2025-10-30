@@ -178,8 +178,8 @@ public partial class DtbEditorViewModel : ViewModelBase
             return;
         }
 
-    byte[] initialValue = NewPropertyUseHex ? Array.Empty<byte>() : new byte[] { 0 };
-    var property = new EditableDtbProperty(name, initialValue);
+        byte[] initialValue = NewPropertyUseHex ? Array.Empty<byte>() : new byte[] { 0 };
+        var property = new EditableDtbProperty(name, initialValue);
         _document.TrackProperty(property);
 
         if (NewPropertyUseHex)

@@ -61,5 +61,8 @@
         <TabItem Header="OpenixIMG">
             <views:OpenixImgView DataContext="{Binding OpenixImg}" />
         </TabItem>
+        <TabItem Header="Efex">
+            <views:EfexView DataContext="{Binding Efex}" />
+        </TabItem>
     </TabControl>
 </u:UrsaWindow>

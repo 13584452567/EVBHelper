@@ -1,5 +1,5 @@
-using System;
 using OpenixCard.Logging;
+using System;
 
 namespace EVBHelper.Models;
 

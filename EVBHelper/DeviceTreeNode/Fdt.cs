@@ -2,8 +2,6 @@
 using DeviceTreeNode.Models;
 using DeviceTreeNode.Nodes;
 using DeviceTreeNode.StandardNodes;
-using System;
-using System.Linq;
 using System.Text;
 
 public class Fdt

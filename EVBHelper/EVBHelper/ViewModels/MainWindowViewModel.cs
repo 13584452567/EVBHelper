@@ -1,10 +1,10 @@
-﻿using System;
-using EVBHelper.Services;
+﻿using EVBHelper.Services;
 using EVBHelper.ViewModels.Dtb;
 using EVBHelper.ViewModels.Gpt;
 using EVBHelper.ViewModels.OpenixCard;
 using EVBHelper.ViewModels.OpenixIMG;
 using EVBHelper.ViewModels.Rfel;
+using System;
 
 namespace EVBHelper.ViewModels;
 
@@ -32,6 +32,7 @@ public partial class MainWindowViewModel : ViewModelBase
         GptEditor = new GptEditorViewModel(fileDialogService);
         OpenixCard = new OpenixCardViewModel(openixCardClientService, fileDialogService);
         OpenixImg = new OpenixImgViewModel(new Services.OpenixIMG.OpenixImgService(), fileDialogService);
+        Efex = new EfexViewModel(fileDialogService);
     }
 
     public RfelViewModel Rfel { get; }
@@ -43,4 +44,6 @@ public partial class MainWindowViewModel : ViewModelBase
     public OpenixCardViewModel OpenixCard { get; }
 
     public OpenixImgViewModel OpenixImg { get; }
+
+    public EfexViewModel Efex { get; }
 }

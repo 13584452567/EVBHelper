@@ -1,8 +1,7 @@
-using System.Globalization;
-using System.Linq;
-using System.Text;
 using OpenixCard.Exceptions;
 using OpenixCard.Models;
+using System.Globalization;
+using System.Text;
 
 namespace OpenixCard.Services;
 

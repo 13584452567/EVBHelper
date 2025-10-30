@@ -1,4 +1,3 @@
-using System.Linq;
 using OpenixCard.Exceptions;
 using OpenixCard.Logging;
 using OpenixCard.Models;

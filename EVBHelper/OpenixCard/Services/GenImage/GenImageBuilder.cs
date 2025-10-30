@@ -1,12 +1,10 @@
-using System.Buffers;
-using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using OpenixCard.Exceptions;
 using OpenixCard.Models;
+using System.Buffers;
+using System.Buffers.Binary;
+using System.Globalization;
+using System.Security.Cryptography;
+using System.Text;
 namespace OpenixCard.Services.GenImage;
 
 internal sealed class GenImageBuilder
