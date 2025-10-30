@@ -11,6 +11,7 @@ using EVBHelper.Services;
 using EVBHelper.Services.OpenixIMG;
 using OpenixCard.Logging;
 using OpenixIMG;
+using Avalonia.Threading;
 
 namespace EVBHelper.ViewModels.OpenixIMG;
 
@@ -149,10 +150,8 @@ public sealed partial class OpenixImgViewModel : ViewModelBase
             op: async (_, token) =>
             {
                 EnsureFile(InputImagePath, "Please select a valid image file");
-                Files.Clear();
                 var res = await _service.InspectAsync(InputImagePath, token).ConfigureAwait(true);
-                IsEncrypted = res.IsEncrypted;
-                HeaderSummary = $"ver=0x{res.Header.version:x}, files={(res.Files?.Length ?? 0)}, pid=0x{(res.Header.header_version==0x0300?res.Header.v3.pid:res.Header.v1.pid):x}, vid=0x{(res.Header.header_version==0x0300?res.Header.v3.vid:res.Header.v1.vid):x}";
+                var items = new System.Collections.Generic.List<FileEntryItem>();
                 if (res.Files != null)
                 {
                     uint ver = res.Header.header_version;
@@ -165,9 +164,20 @@ public sealed partial class OpenixImgViewModel : ViewModelBase
                         uint orig = ver == 0x0300 ? fh.v3.original_length : fh.v1.original_length;
                         uint stored = ver == 0x0300 ? fh.v3.stored_length : fh.v1.stored_length;
                         uint offset = ver == 0x0300 ? fh.v3.offset : fh.v1.offset;
-                        Files.Add(new FileEntryItem(i, maintype, subtype, filename ?? string.Empty, orig, stored, offset));
+                        items.Add(new FileEntryItem(i, maintype, subtype, filename ?? string.Empty, orig, stored, offset));
                     }
                 }
+                var headerText = $"ver=0x{res.Header.version:x}, files={(res.Files?.Length ?? 0)}, pid=0x{(res.Header.header_version==0x0300?res.Header.v3.pid:res.Header.v1.pid):x}, vid=0x{(res.Header.header_version==0x0300?res.Header.v3.vid:res.Header.v1.vid):x}";
+                Dispatcher.UIThread.Post(() =>
+                {
+                    IsEncrypted = res.IsEncrypted;
+                    HeaderSummary = headerText;
+                    Files.Clear();
+                    foreach (var it in items)
+                    {
+                        Files.Add(it);
+                    }
+                });
             });
     }
 
