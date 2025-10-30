@@ -31,13 +31,18 @@ public static class Efex
     public static int ReadStatus(EfexContext ctx)
     {
         var response = new byte[12];
-        EfexUsb.ReadUsbResponse(ctx);
         EfexUsb.UsbBulkRecv(ctx, 0x81, response, response.Length);
 
         var ptr = Marshal.AllocHGlobal(response.Length);
         Marshal.Copy(response, 0, ptr, response.Length);
         var status = Marshal.PtrToStructure<EfexResponse>(ptr);
         Marshal.FreeHGlobal(ptr);
+
+        // Check magic
+        if (status.Magic != 0x41575553) // "AWUS" in little endian
+        {
+            throw new EfexException(EfexError.InvalidResponse);
+        }
 
         return (int)status.Status;
     }

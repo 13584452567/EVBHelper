@@ -1,6 +1,7 @@
 using LibEfex.core;
 using LibEfex.exception;
 using LibEfex.protocols;
+using System;
 
 namespace LibEfex.io;
 
@@ -48,25 +49,6 @@ public static class EfexUsb
         catch (Exception)
         {
             throw new EfexException(EfexError.UsbTransfer);
-        }
-    }
-
-    public static void ReadUsbResponse(EfexContext ctx)
-    {
-        var response = new byte[12];
-        try
-        {
-            ctx.Device.ControlTransfer(0x80, AwUsbRead, 0, 0, response, 12);
-        }
-        catch (Exception)
-        {
-            throw new EfexException(EfexError.UsbTransfer);
-        }
-
-        var magic = System.Text.Encoding.ASCII.GetString(response, 0, 4);
-        if (magic != "AWUS")
-        {
-            throw new EfexException(EfexError.InvalidResponse);
         }
     }
 }
